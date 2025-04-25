@@ -1,3 +1,3 @@
-import db from './lib/models';
+import db from "./lib/models";
 
-afterAll(() => db.sequelize.close());
+//afterAll(() => db.sequelize.close());
