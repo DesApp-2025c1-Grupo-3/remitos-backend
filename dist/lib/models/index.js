@@ -1,13 +1,17 @@
 "use strict";
 
 const fs = require("fs");
+
 const path = require("path");
+
 const { Sequelize } = require("sequelize");
+
 const basename = path.basename(__filename);
+
 const config = require("../config/config"); // Ahora es simple
+
 const dbConfig = config.db;
 const db = {};
-
 const sequelize = new Sequelize(
   dbConfig.database,
   dbConfig.username,
@@ -19,7 +23,6 @@ const sequelize = new Sequelize(
     logging: dbConfig.logging,
   }
 );
-
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
@@ -31,16 +34,15 @@ fs.readdirSync(__dirname)
       sequelize,
       Sequelize.DataTypes
     );
+
     db[model.name] = model;
   });
-
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
-
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
 module.exports = db;
+//# sourceMappingURL=index.js.map

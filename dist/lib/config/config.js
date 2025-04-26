@@ -1,6 +1,9 @@
 const path = require("path");
+
 const debug = require("debug");
+
 const parse = require("pg-connection-string").parse;
+
 const dotenv = require("dotenv");
 
 function getEnvironment() {
@@ -20,14 +23,9 @@ function parseHerokuUrlIfPresent() {
     return {};
   }
 
-  const config = parse(url);
+  const config = parse(url); // Heroku necesita sí o sí SSL, y para eso hay que habilitar el driver nativo.
 
-  // Heroku necesita sí o sí SSL, y para eso hay que habilitar el driver nativo.
-  return {
-    ...config,
-    username: config.user,
-    native: true,
-  };
+  return { ...config, username: config.user, native: true };
 }
 
 function normalizePort(val) {
@@ -57,9 +55,11 @@ function initializeConfig() {
     dialect: "postgres",
     logging: false,
   };
+
   if (process.env.SQL_DATABASE_SCHEMA) {
     dbConfig.schema = process.env.SQL_DATABASE_SCHEMA;
   }
+
   if (environment === "development") {
     dbConfig.seederStorage = "sequelize";
   } else if (environment === "test") {
@@ -68,6 +68,7 @@ function initializeConfig() {
   } else if (environment === "production") {
     dbConfig = { ...dbConfig, ...parseHerokuUrlIfPresent() };
   }
+
   return {
     db: dbConfig,
     port: normalizePort(process.env.PORT || "3001"),
@@ -75,5 +76,5 @@ function initializeConfig() {
 }
 
 initializeEnv();
-
 module.exports = initializeConfig();
+//# sourceMappingURL=config.js.map
