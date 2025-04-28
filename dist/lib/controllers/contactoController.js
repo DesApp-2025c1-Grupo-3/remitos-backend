@@ -58,5 +58,19 @@ const deleteContacto = async (req, res) => {
 };
 
 controller.deleteContacto = deleteContacto;
+
+const updateContacto = async (req, res) => {
+  const id = req.params.id;
+  const { personaAutoriza, correoElectronico, telefono } = req.body;
+  const contacto = await Contacto.findByPk(id);
+  await contacto.update({
+    personaAutoriza,
+    correoElectronico,
+    telefono,
+  });
+  res.status(200).json(contacto);
+};
+
+controller.updateContacto = updateContacto;
 module.exports = controller;
 //# sourceMappingURL=contactoController.js.map

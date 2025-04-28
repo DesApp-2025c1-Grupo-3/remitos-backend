@@ -23,12 +23,14 @@ route.post(
   clienteController.createCliente
 ); //Crea un cliente y asocia un cliente que tambien crea
 
-route.post("/clienteContacto", clienteController.createClienteWithContacto);
+route.post("/clienteContacto", clienteController.createClienteWithContacto); //Edita un cliente
+
 route.put(
   "/cliente/:id",
   schemaValidator(clienteSchema),
   clienteController.updateCliente
-);
+); //Borra un cliente
+
 route.delete(
   "/cliente/:id",
   clienteMiddleware.validateClienteId,

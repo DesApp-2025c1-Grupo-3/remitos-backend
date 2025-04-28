@@ -1,25 +1,22 @@
 /* eslint-disable no-console */
 const express = require("express");
 
-const compression = require("compression");
+const app = express();
 
-const cookieParser = require("cookie-parser");
+const compression = require("compression"); //	Comprimir respuestas para ser más rápido
 
-const cors = require("cors"); //const helmet = require("helmet");
+const cookieParser = require("cookie-parser"); //	Leer cookies fácilmente
 
-const logger = require("morgan"); ///rutas
+const cors = require("cors");
 
-const routes = require("./routes/estado.routes"); // <-- después vemos si hay que ajustar más adentro de routes
+const helmet = require("helmet"); //Agregar seguridad automática
 
-const rutasContacto = require("./routes/contacto.routes");
+const logger = require("morgan"); //Mostrar logs de requests
+///rutas
 
-const rutasCliente = require("./routes/cliente.routes");
-
-const rutasDestino = require("./routes/destino.route"); ///
+const rutas = require("./routes/index");
 
 const config = require("./config/config.js");
-
-const app = express();
 /**
  * Get port from environment and store in Express.
  */
@@ -32,14 +29,15 @@ app.use(
     extended: false,
   })
 );
-app.use(cookieParser()); //app.use(helmet());
-
+app.use(cookieParser());
+app.use(helmet());
 app.use(cors());
 app.use(compression()); //rutas
 
-app.use("/estado", routes);
-app.use(rutasContacto);
-app.use(rutasCliente);
-app.use(rutasDestino);
+app.use(rutas.rutasCliente);
+app.use(rutas.rutasContacto);
+app.use(rutas.rutasEstado);
+app.use(rutas.rutasDestino);
+app.use(rutas.rutasRemito);
 module.exports = app;
 //# sourceMappingURL=app.js.map

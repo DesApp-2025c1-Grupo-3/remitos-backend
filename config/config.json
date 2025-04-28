@@ -4,7 +4,8 @@
     "password": "maleyuyu",
     "database": "desApp",
     "host": "localhost",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "port": 5432
   },
   "test": {
     "username": "root",

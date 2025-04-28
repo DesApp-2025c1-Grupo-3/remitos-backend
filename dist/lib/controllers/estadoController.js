@@ -28,5 +28,29 @@ const createEstado = async (req, res) => {
 };
 
 controller.createEstado = createEstado;
+
+const updateEstado = async (req, res) => {
+  const idEstado = req.params.id;
+  const { descripcion } = req.body;
+  const estado = await Estado.findByPk(idEstado);
+  await estado.update({
+    descripcion,
+  });
+  res.status(200).json(estado);
+};
+
+controller.updateEstado = updateEstado;
+
+const deleteEstado = async (req, res) => {
+  const idEstado = req.params.id;
+  const estado = await Estado.destroy({
+    where: {
+      id: idEstado,
+    },
+  });
+  res.status(200).json(estado);
+};
+
+controller.deleteEstado = deleteEstado;
 module.exports = controller;
 //# sourceMappingURL=estadoController.js.map

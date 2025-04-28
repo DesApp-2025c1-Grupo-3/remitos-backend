@@ -4,17 +4,45 @@ const route = express.Router();
 
 const destinoController = require("../controllers/destinoController");
 
-const schemaValidator = require("../middlewares/schemaValidator"); //const clienteSchema = require("../schemas/clienteSchema");
+const schemaValidator = require("../middlewares/schemaValidator");
 
-const destinoMiddleware = require("../middlewares/destinoMiddleware");
+const destinoSchema = require("../schemas/destinoSchema");
 
-route.get("/destino", destinoController.getDestino);
-route.get("/destino/:id", destinoController.getDestino); //Crea un cliente
+const destinoContactoSchema = require("../schemas/destinoContactoSchema");
 
-route.post("/destino", destinoController.createDestino); //Crea un cliente y asocia un cliente que tambien crea
+const destinoMiddleware = require("../middlewares/destinoMiddleware"); //Trae todos los destinos
 
-route.post("/destinoContacto", destinoController.createDestinoWithContacto);
-route.put("/destino/:id", destinoController.updateDestino);
-route.delete("/destino/:id", destinoController.deleteDestino);
+route.get("/destino", destinoController.getDestino); //Trae destino por ID
+
+route.get(
+  "/destino/:id",
+  destinoMiddleware.validateDestinoId,
+  destinoController.getDestino
+); //Crea un cliente
+
+route.post(
+  "/destino",
+  schemaValidator(destinoSchema),
+  destinoController.createDestino
+); //Crea un cliente y asocia un cliente que tambien crea
+
+route.post(
+  "/destinoContacto",
+  schemaValidator(destinoContactoSchema),
+  destinoController.createDestinoWithContacto
+); //Edita un destino
+
+route.put(
+  "/destino/:id",
+  schemaValidator(destinoSchema),
+  destinoMiddleware.validateDestinoId,
+  destinoController.updateDestino
+); //Borra un destino
+
+route.delete(
+  "/destino/:id",
+  destinoMiddleware.validateDestinoId,
+  destinoController.deleteDestino
+);
 module.exports = route;
 //# sourceMappingURL=destino.route.js.map
