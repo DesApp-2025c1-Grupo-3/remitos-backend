@@ -1,5 +1,7 @@
 "use strict";
+
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Contacto extends Model {
     /**
@@ -18,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         });
     }
   }
+
   Contacto.init(
     {
       personaAutorizada: DataTypes.STRING,
@@ -31,3 +34,4 @@ module.exports = (sequelize, DataTypes) => {
   );
   return Contacto;
 };
+//# sourceMappingURL=contacto.js.map

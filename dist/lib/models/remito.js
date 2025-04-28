@@ -1,5 +1,7 @@
 "use strict";
+
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Remito extends Model {
     /**
@@ -18,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         });
     }
   }
+
   Remito.init(
     {
       numeroAsignado: {
@@ -80,3 +83,4 @@ module.exports = (sequelize, DataTypes) => {
   );
   return Remito;
 };
+//# sourceMappingURL=remito.js.map

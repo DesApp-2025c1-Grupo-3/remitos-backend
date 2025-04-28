@@ -1,5 +1,7 @@
 "use strict";
+
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Cliente extends Model {
     /**
@@ -21,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       );
     }
   }
+
   Cliente.init(
     {
       razonSocial: {
@@ -44,3 +47,4 @@ module.exports = (sequelize, DataTypes) => {
   );
   return Cliente;
 };
+//# sourceMappingURL=cliente.js.map

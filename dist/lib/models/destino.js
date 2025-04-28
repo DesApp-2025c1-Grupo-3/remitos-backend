@@ -1,5 +1,7 @@
 "use strict";
+
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Destino extends Model {
     /**
@@ -18,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
+
   Destino.init(
     {
       pais: DataTypes.STRING,
@@ -32,3 +35,4 @@ module.exports = (sequelize, DataTypes) => {
   );
   return Destino;
 };
+//# sourceMappingURL=destino.js.map

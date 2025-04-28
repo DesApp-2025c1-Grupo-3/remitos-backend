@@ -1,7 +1,11 @@
 const { where } = require("sequelize");
+
 const { Cliente } = require("../models");
+
 const { Contacto } = require("../models");
+
 const { message } = require("../schemas/estadoSchema");
+
 const controller = {};
 
 const getCliente = async (req, res) => {
@@ -13,6 +17,7 @@ const getCliente = async (req, res) => {
   });
   res.status(200).json(clientes);
 };
+
 controller.getCliente = getCliente;
 
 const getClienteById = async (req, res) => {
@@ -25,6 +30,7 @@ const getClienteById = async (req, res) => {
   });
   res.status(200).json(cliente);
 };
+
 controller.getClienteById = getClienteById;
 
 const createCliente = async (req, res) => {
@@ -65,23 +71,36 @@ const createClienteWithContacto = async (req, res) => {
   });
   res.status(200).json(clienteConContactos);
 };
+
 controller.createClienteWithContacto = createClienteWithContacto;
 
 const deleteCliente = async (req, res) => {
   const idCliente = req.params.id;
-  const cliente = await Cliente.destroy({ where: { id: idCliente } });
-  res.status(200).json({ message: "Cliente eliminado correctamente" });
+  const cliente = await Cliente.destroy({
+    where: {
+      id: idCliente,
+    },
+  });
+  res.status(200).json({
+    message: "Cliente eliminado correctamente",
+  });
 };
+
 controller.deleteCliente = deleteCliente;
 
 const updateCliente = async (req, res) => {
   const idCliente = req.params.id;
   const { razonSocial, cuit_rut, direccion, tipoEmpresa } = req.body;
   const cliente = await Cliente.findByPk(idCliente);
-  await cliente.update({ razonSocial, cuit_rut, direccion, tipoEmpresa });
+  await cliente.update({
+    razonSocial,
+    cuit_rut,
+    direccion,
+    tipoEmpresa,
+  });
   res.status(200).json(cliente);
 };
 
 controller.updateCliente = updateCliente;
-
 module.exports = controller;
+//# sourceMappingURL=clienteController.js.map
