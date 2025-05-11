@@ -5,7 +5,12 @@ const { message } = require("../schemas/estadoSchema");
 const controller = {};
 
 const getDestino = async (req, res) => {
-  const destinos = await Destino.findAll();
+  const destinos = await Destino.findAll({
+    include: {
+      model: Contacto,
+      as: "contactos",
+    },
+  });
   res.status(200).json(destinos);
 };
 
@@ -13,7 +18,12 @@ controller.getDestino = getDestino;
 
 const getDestinoById = async (req, res) => {
   const id = req.params.id;
-  const destinos = await Destino.findAll(id);
+  const destinos = await Destino.findAll(id, {
+    include: {
+      model: Contacto,
+      as: "contactos",
+    },
+  });
   res.status(200).json(destinos);
 };
 

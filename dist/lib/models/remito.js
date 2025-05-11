@@ -11,12 +11,25 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Remito.belongsTo(models.Cliente, {
-        foreignKey: "ClienteId",
+        foreignKey: {
+          name: "clienteId",
+          allowNull: true,
+        },
         as: "cliente",
       }),
         Remito.belongsTo(models.Destino, {
-          foreignKey: "DestinoId",
+          foreignKey: {
+            name: "destinoId",
+            allowNull: true,
+          },
           as: "destino",
+        }),
+        Remito.belongsTo(models.Estado, {
+          foreignKey: {
+            name: "estadoId",
+            allowNull: true,
+          },
+          as: "estado",
         });
     }
   }
@@ -73,6 +86,18 @@ module.exports = (sequelize, DataTypes) => {
       },
       archivoAdjunto: {
         type: DataTypes.STRING,
+        allowNull: true,
+      },
+      clienteId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      destinoId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      estadoId: {
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
     },

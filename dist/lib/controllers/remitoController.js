@@ -1,11 +1,28 @@
-const { Remito, Cliente, Destino, Contacto } = require("../models");
+const { includes } = require("lodash");
+
+const { Remito, Cliente, Destino, Contacto, Estado } = require("../models");
 
 const { message } = require("../schemas/estadoSchema");
 
 const controller = {};
 
 const getRemitos = async (req, res) => {
-  const remitos = await Remito.findAll();
+  const remitos = await Remito.findAll({
+    include: [
+      {
+        model: Destino,
+        as: "destino",
+      },
+      {
+        model: Cliente,
+        as: "cliente",
+      },
+      {
+        model: Estado,
+        as: "estado",
+      },
+    ],
+  });
   res.status(200).json(remitos);
 };
 
@@ -22,6 +39,10 @@ const getRemitoById = async (req, res) => {
       {
         model: Cliente,
         as: "cliente",
+      },
+      {
+        model: Estado,
+        as: "estado",
       },
     ],
   });
@@ -80,20 +101,8 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
     requisitosEspeciales,
     observaciones,
     archivoAdjunto,
-    pais,
-    provincia,
-    localidad,
-    direccionD,
-    personaAutorizadaD,
-    correoElectronicoD,
-    telefonoD,
-    razonSocial,
-    direccionC,
-    cuit_rut,
-    tipoEmpresa,
-    personaAutorizada,
-    correoElectronico,
-    telefono,
+    clienteId,
+    destinoId,
   } = req.body;
   const fechaEmision = new Date();
   const remito = await Remito.create({
@@ -110,30 +119,9 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
     requisitosEspeciales,
     observaciones,
     archivoAdjunto,
-  });
-  const destino = await Destino.create({
-    pais,
-    provincia,
-    localidad,
-    direccionD,
-  });
-  const nuevoContactoDestino = await Contacto.create({
-    personaAutorizadaD,
-    correoElectronicoD,
-    telefonoD,
-    destinoId: destino.id,
-  });
-  const cliente = await Cliente.create({
-    razonSocial,
-    cuit_rut,
-    direccionC,
-    tipoEmpresa,
-  });
-  const nuevoContactoCliente = await Contacto.create({
-    personaAutorizada,
-    correoElectronico,
-    telefono,
-    clienteId: cliente.id,
+    clienteId,
+    destinoId,
+    estadoId: 1,
   });
   const remitoWithDestinoAndCliente = await Remito.findByPk(remito.id, {
     include: [
@@ -189,6 +177,34 @@ const updateRemito = async (req, res) => {
 };
 
 controller.updateRemito = updateRemito;
+
+const updateEstadoRemito = async (req, res) => {
+  const remitoId = req.params.id;
+  const estId = req.params.eid;
+  const remito = await Remito.findByPk(remitoId);
+  await remito.update({
+    estadoId: estId,
+  });
+  const remitoActualizado = await Remito.findByPk(remitoId, {
+    include: [
+      {
+        model: Cliente,
+        as: "cliente",
+      },
+      {
+        model: Destino,
+        as: "destino",
+      },
+      {
+        model: Estado,
+        as: "estado",
+      },
+    ],
+  });
+  res.status(200).json(remitoActualizado);
+};
+
+controller.updateEstadoRemito = updateEstadoRemito;
 
 const deleteRemito = async (req, res) => {
   const id = req.params.id;

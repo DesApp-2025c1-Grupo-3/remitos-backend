@@ -17,7 +17,7 @@ route.get("/destino", destinoController.getDestino); //Trae destino por ID
 route.get(
   "/destino/:id",
   destinoMiddleware.validateDestinoId,
-  destinoController.getDestino
+  destinoController.getDestinoById
 ); //Crea un cliente
 
 route.post(

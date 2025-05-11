@@ -25,8 +25,7 @@ route.post(
 ); //CREA EL REMITO CON DESTINO Y SU CONTACTO Y CLIENTE Y SU CONTACTO
 
 route.post(
-  "/remito",
-  schemaValidator(remitoSchema),
+  "/remitoFinal", //schemaValidator(remitoSchema),
   remitoController.createRemitoWithClienteAndDestino
 ); //Edita remito
 
@@ -34,7 +33,9 @@ route.put(
   "/remito/:id",
   schemaValidator(remitoSchema),
   remitoController.updateRemito
-); //Borra remito
+); //Edita estado de un remito
+
+route.put("/remito/:id/estado/:eid", remitoController.updateEstadoRemito); //Borra remito
 
 route.delete(
   "/remito/:id",
