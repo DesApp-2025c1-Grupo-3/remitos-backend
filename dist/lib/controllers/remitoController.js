@@ -64,9 +64,9 @@ const createRemito = async (req, res) => {
     cantidadPallets,
     requisitosEspeciales,
     observaciones,
-    archivoAdjunto,
   } = req.body;
   const fechaEmision = new Date();
+  const archivoEnviado = req.file?.path || null;
   const remito = await Remito.create({
     numeroAsignado,
     tipoMercaderia,
@@ -80,7 +80,7 @@ const createRemito = async (req, res) => {
     cantidadPallets,
     requisitosEspeciales,
     observaciones,
-    archivoAdjunto,
+    archivoAdjunto: archivoEnviado,
   });
   res.status(201).json(remito);
 };
@@ -100,10 +100,10 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
     cantidadPallets,
     requisitosEspeciales,
     observaciones,
-    archivoAdjunto,
     clienteId,
     destinoId,
   } = req.body;
+  const archivoEnviado = req.file?.path || null;
   const fechaEmision = new Date();
   const remito = await Remito.create({
     numeroAsignado,
@@ -118,7 +118,7 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
     cantidadPallets,
     requisitosEspeciales,
     observaciones,
-    archivoAdjunto,
+    archivoAdjunto: archivoEnviado,
     clienteId,
     destinoId,
     estadoId: 1,

@@ -1,3 +1,5 @@
+const { where } = require("sequelize");
+
 const { Destino, Contacto } = require("../models");
 
 const { message } = require("../schemas/estadoSchema");
@@ -28,6 +30,20 @@ const getDestinoById = async (req, res) => {
 };
 
 controller.getDestinoById = getDestinoById;
+
+const getDestinoFiltrado = async (req, res) => {
+  const { pais, provincia, localidad } = req.query;
+  const filtros = {};
+  if (pais) filtros.pais = pais;
+  if (provincia) filtros.provincia = provincia;
+  if (localidad) filtros.localidad = localidad;
+  const destinos = await Destino.findAll({
+    where: filtros,
+  });
+  res.status(200).json(destinos);
+};
+
+controller.getDestinoFiltrado = getDestinoFiltrado;
 
 const createDestino = async (req, res) => {
   const destino = req.body;

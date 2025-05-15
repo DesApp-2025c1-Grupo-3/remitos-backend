@@ -8,7 +8,9 @@ const schemaValidator = require("../middlewares/schemaValidator");
 
 const remitoMiddleware = require("../middlewares/remitoMiddleware");
 
-const remitoSchema = require("../schemas/remitoSchema"); //Trae todos los remitos
+const remitoSchema = require("../schemas/remitoSchema");
+
+const upload = require("../middlewares/upload"); //Trae todos los remitos
 
 route.get("/remito", remitoController.getRemitos); //Trae remito por id
 
@@ -20,12 +22,14 @@ route.get(
 
 route.post(
   "/remito",
+  upload.single("archivoAdjunto"),
   schemaValidator(remitoSchema),
   remitoController.createRemito
 ); //CREA EL REMITO CON DESTINO Y SU CONTACTO Y CLIENTE Y SU CONTACTO
 
 route.post(
-  "/remitoFinal", //schemaValidator(remitoSchema),
+  "/remitoFinal",
+  upload.single("archivoAdjunto"), //schemaValidator(remitoSchema),
   remitoController.createRemitoWithClienteAndDestino
 ); //Edita remito
 

@@ -10,7 +10,9 @@ const destinoSchema = require("../schemas/destinoSchema");
 
 const destinoContactoSchema = require("../schemas/destinoContactoSchema");
 
-const destinoMiddleware = require("../middlewares/destinoMiddleware"); //Trae todos los destinos
+const destinoMiddleware = require("../middlewares/destinoMiddleware");
+
+const middleware = require("../middlewares/estadoMiddleware"); //Trae todos los destinos
 
 route.get("/destino", destinoController.getDestino); //Trae destino por ID
 
@@ -18,6 +20,12 @@ route.get(
   "/destino/:id",
   destinoMiddleware.validateDestinoId,
   destinoController.getDestinoById
+); //Trae destinos filtrados
+
+route.get(
+  "/destinoFiltrado",
+  destinoMiddleware.validarFiltroDestino,
+  destinoController.getDestinoFiltrado
 ); //Crea un cliente
 
 route.post(

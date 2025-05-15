@@ -32,7 +32,8 @@ app.use(
 app.use(cookieParser());
 app.use(helmet());
 app.use(cors());
-app.use(compression()); //rutas
+app.use(compression());
+app.use("/uploads", express.static("uploads")); //rutas
 
 app.use(rutas.rutasCliente);
 app.use(rutas.rutasContacto);
