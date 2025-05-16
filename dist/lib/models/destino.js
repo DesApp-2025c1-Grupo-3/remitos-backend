@@ -23,10 +23,15 @@ module.exports = (sequelize, DataTypes) => {
 
   Destino.init(
     {
+      nombre: DataTypes.STRING,
       pais: DataTypes.STRING,
       provincia: DataTypes.STRING,
       localidad: DataTypes.STRING,
       direccion: DataTypes.STRING,
+      activo: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
     },
     {
       sequelize,

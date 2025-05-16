@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Estado.hasMany(models.Remito, {
-        foreignKey: "EstadoId",
+        foreignKey: "estadoId",
         as: "estados",
       });
     }

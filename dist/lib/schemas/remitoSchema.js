@@ -86,6 +86,14 @@ const remitoSchema = Joi.object().keys({
     "string.base": "Archivo adjunto debe ser un texto",
     "string.max": "Archivo adjunto no puede tener más de 500 caracteres",
   }),
+  prioridad: Joi.string()
+    .valid("normal", "alta", "urgente")
+    .required()
+    .messages({
+      "any.require": "Prioridad es requerido",
+      "any.only": "Prioridad sólo acepta normal, alta o urgente",
+      "string.empty": "tipoEmpresa no puede estar vacío",
+    }),
 });
 module.exports = remitoSchema;
 //# sourceMappingURL=remitoSchema.js.map

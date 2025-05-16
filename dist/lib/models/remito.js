@@ -88,6 +88,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      prioridad: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      activo: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
       clienteId: {
         type: DataTypes.INTEGER,
         allowNull: true,
