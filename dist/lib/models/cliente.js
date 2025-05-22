@@ -1,6 +1,8 @@
 "use strict";
 
-const { Model } = require("sequelize");
+const {
+  Model
+} = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Cliente extends Model {
@@ -12,40 +14,38 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Cliente.hasMany(models.Remito, {
         foreignKey: "clienteId",
-        as: "remitos",
+        as: "remitos"
       });
       Cliente.hasMany(models.Contacto, {
         foreignKey: "clienteId",
-        as: "contactos",
+        as: "contactos"
       });
     }
+
   }
 
-  Cliente.init(
-    {
-      razonSocial: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      cuit_rut: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      direccion: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      tipoEmpresa: DataTypes.STRING,
-      activo: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-      },
+  Cliente.init({
+    razonSocial: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
-    {
-      sequelize,
-      modelName: "Cliente",
+    cuit_rut: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    direccion: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    tipoEmpresa: DataTypes.STRING,
+    activo: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     }
-  );
+  }, {
+    sequelize,
+    modelName: "Cliente"
+  });
   return Cliente;
 };
 //# sourceMappingURL=cliente.js.map

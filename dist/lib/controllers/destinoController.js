@@ -1,8 +1,15 @@
-const { where } = require("sequelize");
+const {
+  where
+} = require("sequelize");
 
-const { Destino, Contacto } = require("../models");
+const {
+  Destino,
+  Contacto
+} = require("../models");
 
-const { message } = require("../schemas/estadoSchema");
+const {
+  message
+} = require("../schemas/estadoSchema");
 
 const controller = {};
 
@@ -10,8 +17,8 @@ const getDestino = async (req, res) => {
   const destinos = await Destino.findAll({
     include: {
       model: Contacto,
-      as: "contactos",
-    },
+      as: "contactos"
+    }
   });
   res.status(200).json(destinos);
 };
@@ -23,8 +30,8 @@ const getDestinoById = async (req, res) => {
   const destinos = await Destino.findAll(id, {
     include: {
       model: Contacto,
-      as: "contactos",
-    },
+      as: "contactos"
+    }
   });
   res.status(200).json(destinos);
 };
@@ -32,13 +39,17 @@ const getDestinoById = async (req, res) => {
 controller.getDestinoById = getDestinoById;
 
 const getDestinoFiltrado = async (req, res) => {
-  const { pais, provincia, localidad } = req.query;
+  const {
+    pais,
+    provincia,
+    localidad
+  } = req.query;
   const filtros = {};
   if (pais) filtros.pais = pais;
   if (provincia) filtros.provincia = provincia;
   if (localidad) filtros.localidad = localidad;
   const destinos = await Destino.findAll({
-    where: filtros,
+    where: filtros
   });
   res.status(200).json(destinos);
 };
@@ -61,25 +72,25 @@ const createDestinoWithContacto = async (req, res) => {
     direccion,
     personaAutorizada,
     correoElectronico,
-    telefono,
+    telefono
   } = req.body;
   const destino = await Destino.create({
     pais,
     provincia,
     localidad,
-    direccion,
+    direccion
   });
   const nuevoContacto = await Contacto.create({
     personaAutorizada,
     correoElectronico,
     telefono,
-    destinoId: destino.id,
+    destinoId: destino.id
   });
   const destinoConContacto = await Destino.findByPk(destino.id, {
     include: {
       model: Contacto,
-      as: "contactos",
-    },
+      as: "contactos"
+    }
   });
   res.status(200).json(destinoConContacto);
 };
@@ -87,14 +98,19 @@ const createDestinoWithContacto = async (req, res) => {
 controller.createDestinoWithContacto = createDestinoWithContacto;
 
 const updateDestino = async (req, res) => {
-  const { pais, provincia, localidad, direccion } = req.body;
+  const {
+    pais,
+    provincia,
+    localidad,
+    direccion
+  } = req.body;
   const idDestino = req.params.id;
   const destino = await Destino.findByPk(idDestino);
   await destino.update({
     pais,
     provincia,
     localidad,
-    direccion,
+    direccion
   });
   res.status(200).json(destino);
 };
@@ -105,11 +121,11 @@ const deleteDestino = async (req, res) => {
   const idDestino = req.params.id;
   const destino = await Destino.destroy({
     where: {
-      id: idDestino,
-    },
+      id: idDestino
+    }
   });
   res.status(200).json({
-    message: "Destino eliminado correctamente",
+    message: "Destino eliminado correctamente"
   });
 };
 

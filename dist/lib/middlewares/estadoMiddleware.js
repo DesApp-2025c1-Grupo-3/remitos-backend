@@ -1,4 +1,6 @@
-const { Estado } = require("../models");
+const {
+  Estado
+} = require("../models");
 
 const middleware = {};
 
@@ -8,7 +10,7 @@ const validateEstadoId = async (req, res, next) => {
 
   if (!estado) {
     res.status(404).json({
-      message: `El estado con id ${id} no existe`,
+      message: `El estado con id ${id} no existe`
     });
   }
 
