@@ -7,32 +7,32 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       pais: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       provincia: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       localidad: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       direccion: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("Destinos");
-  },
+  }
 };
 //# sourceMappingURL=20250425000830-create-destino.js.map

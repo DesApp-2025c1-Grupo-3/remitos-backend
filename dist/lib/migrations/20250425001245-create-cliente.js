@@ -7,32 +7,32 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       razonSocial: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       cuit_rut: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       direccion: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       tipoEmpresa: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("Clientes");
-  },
+  }
 };
 //# sourceMappingURL=20250425001245-create-cliente.js.map

@@ -1,6 +1,8 @@
 "use strict";
 
-const { Model } = require("sequelize");
+const {
+  Model
+} = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Destino extends Model {
@@ -12,32 +14,30 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Destino.hasMany(models.Remito, {
         foreignKey: "destinoId",
-        as: "remitos",
+        as: "remitos"
       });
       Destino.hasMany(models.Contacto, {
         foreignKey: "destinoId",
-        as: "contactos",
+        as: "contactos"
       });
     }
+
   }
 
-  Destino.init(
-    {
-      nombre: DataTypes.STRING,
-      pais: DataTypes.STRING,
-      provincia: DataTypes.STRING,
-      localidad: DataTypes.STRING,
-      direccion: DataTypes.STRING,
-      activo: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-      },
-    },
-    {
-      sequelize,
-      modelName: "Destino",
+  Destino.init({
+    nombre: DataTypes.STRING,
+    pais: DataTypes.STRING,
+    provincia: DataTypes.STRING,
+    localidad: DataTypes.STRING,
+    direccion: DataTypes.STRING,
+    activo: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     }
-  );
+  }, {
+    sequelize,
+    modelName: "Destino"
+  });
   return Destino;
 };
 //# sourceMappingURL=destino.js.map

@@ -1,6 +1,8 @@
 "use strict";
 
-const { Model } = require("sequelize");
+const {
+  Model
+} = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Remito extends Model {
@@ -13,107 +15,78 @@ module.exports = (sequelize, DataTypes) => {
       Remito.belongsTo(models.Cliente, {
         foreignKey: {
           name: "clienteId",
-          allowNull: true,
+          allowNull: true
         },
-        as: "cliente",
-      }),
-        Remito.belongsTo(models.Destino, {
-          foreignKey: {
-            name: "destinoId",
-            allowNull: true,
-          },
-          as: "destino",
-        }),
-        Remito.belongsTo(models.Estado, {
-          foreignKey: {
-            name: "estadoId",
-            allowNull: true,
-          },
-          as: "estado",
-        });
+        as: "cliente"
+      }), Remito.belongsTo(models.Destino, {
+        foreignKey: {
+          name: "destinoId",
+          allowNull: true
+        },
+        as: "destino"
+      }), Remito.belongsTo(models.Estado, {
+        foreignKey: {
+          name: "estadoId",
+          allowNull: true
+        },
+        as: "estado"
+      });
+      Remito.belongsTo(models.Mercaderia, {
+        foreignKey: {
+          name: "mercaderiaId",
+          allowNull: true
+        },
+        as: "mercaderia"
+      });
     }
+
   }
 
-  Remito.init(
-    {
-      numeroAsignado: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      tipoMercaderia: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      valorDeclarado: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      volumenMetrosCubico: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      pesoMercaderia: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      fechaEmision: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-      cantidadBobinas: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      cantidadRacks: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      cantidadBultos: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      cantidadPallets: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      requisitosEspeciales: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      observaciones: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      archivoAdjunto: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      prioridad: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      activo: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-      },
-      clienteId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      destinoId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      estadoId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
+  Remito.init({
+    numeroAsignado: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
-    {
-      sequelize,
-      modelName: "Remito",
+    fechaEmision: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    observaciones: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    archivoAdjunto: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    prioridad: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
+    clienteId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    destinoId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    estadoId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    mercaderiaId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
-  );
+  }, {
+    sequelize,
+    modelName: "Remito"
+  });
   return Remito;
 };
 //# sourceMappingURL=remito.js.map

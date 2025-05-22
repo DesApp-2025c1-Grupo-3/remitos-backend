@@ -11,30 +11,14 @@ const clienteSchema = require("../schemas/clienteSchema");
 const clienteMiddleware = require("../middlewares/clienteMiddleware");
 
 route.get("/cliente", clienteController.getCliente);
-route.get(
-  "/cliente/:id",
-  clienteMiddleware.validateClienteId,
-  clienteController.getClienteById
-); //Crea un cliente
+route.get("/cliente/:id", clienteMiddleware.validateClienteId, clienteController.getClienteById); //Crea un cliente
 
-route.post(
-  "/cliente",
-  schemaValidator(clienteSchema),
-  clienteController.createCliente
-); //Crea un cliente y asocia un cliente que tambien crea
+route.post("/cliente", schemaValidator(clienteSchema), clienteController.createCliente); //Crea un cliente y asocia un cliente que tambien crea
 
 route.post("/clienteContacto", clienteController.createClienteWithContacto); //Edita un cliente
 
-route.put(
-  "/cliente/:id",
-  schemaValidator(clienteSchema),
-  clienteController.updateCliente
-); //Borra un cliente
+route.put("/cliente/:id", schemaValidator(clienteSchema), clienteController.updateCliente); //Borra un cliente
 
-route.delete(
-  "/cliente/:id",
-  clienteMiddleware.validateClienteId,
-  clienteController.deleteCliente
-);
+route.delete("/cliente/:id", clienteMiddleware.validateClienteId, clienteController.deleteCliente);
 module.exports = route;
 //# sourceMappingURL=cliente.routes.js.map

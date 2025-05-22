@@ -1,6 +1,10 @@
-const { includes } = require("lodash");
+const {
+  includes
+} = require("lodash");
 
-const { Estado } = require("../models");
+const {
+  Estado
+} = require("../models");
 
 const controller = {};
 
@@ -14,7 +18,7 @@ controller.getEstado = getEstado;
 const getEstadoById = async (req, res) => {
   const id = req.params.id;
   const estado = await Estado.findByPk({
-    id,
+    id
   });
   res.status(200).json(estado);
 };
@@ -31,10 +35,12 @@ controller.createEstado = createEstado;
 
 const updateEstado = async (req, res) => {
   const idEstado = req.params.id;
-  const { descripcion } = req.body;
+  const {
+    descripcion
+  } = req.body;
   const estado = await Estado.findByPk(idEstado);
   await estado.update({
-    descripcion,
+    descripcion
   });
   res.status(200).json(estado);
 };
@@ -45,8 +51,8 @@ const deleteEstado = async (req, res) => {
   const idEstado = req.params.id;
   const estado = await Estado.destroy({
     where: {
-      id: idEstado,
-    },
+      id: idEstado
+    }
   });
   res.status(200).json(estado);
 };
