@@ -7,29 +7,29 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       personaAutorizada: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       correoElectronico: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       telefono: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("Contactos");
-  },
+  }
 };
 //# sourceMappingURL=20250425001000-create-contacto.js.map

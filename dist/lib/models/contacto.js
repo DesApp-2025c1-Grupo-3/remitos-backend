@@ -1,6 +1,8 @@
 "use strict";
 
-const { Model } = require("sequelize");
+const {
+  Model
+} = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Contacto extends Model {
@@ -12,26 +14,23 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Contacto.belongsTo(models.Cliente, {
         foreignKey: "clienteId",
-        as: "cliente",
-      }),
-        Contacto.belongsTo(models.Destino, {
-          foreignKey: "destinoId",
-          as: "destino",
-        });
+        as: "cliente"
+      }), Contacto.belongsTo(models.Destino, {
+        foreignKey: "destinoId",
+        as: "destino"
+      });
     }
+
   }
 
-  Contacto.init(
-    {
-      personaAutorizada: DataTypes.STRING,
-      correoElectronico: DataTypes.STRING,
-      telefono: DataTypes.INTEGER,
-    },
-    {
-      sequelize,
-      modelName: "Contacto",
-    }
-  );
+  Contacto.init({
+    personaAutorizada: DataTypes.STRING,
+    correoElectronico: DataTypes.STRING,
+    telefono: DataTypes.INTEGER
+  }, {
+    sequelize,
+    modelName: "Contacto"
+  });
   return Contacto;
 };
 //# sourceMappingURL=contacto.js.map

@@ -1,4 +1,6 @@
-const { Remito } = require("../models");
+const {
+  Remito
+} = require("../models");
 
 const middleware = {};
 
@@ -8,7 +10,7 @@ const validateRemitoId = async (req, res, next) => {
 
   if (!estado) {
     res.status(404).json({
-      message: `El estado con id ${id} no existe`,
+      message: `El estado con id ${id} no existe`
     });
   }
 

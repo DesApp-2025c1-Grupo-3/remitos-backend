@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
+  up: async (queryInterface, Sequelize) => {/*
     await queryInterface.addColumn("Remitos", "estadoId", {
       type: Sequelize.INTEGER,
       allowNull: true, // para evitar el error
@@ -10,7 +10,7 @@ module.exports = {
         key: "id",
       },
     });
-  },
+  */},
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.removeColumn("Remitos", "estadoId");

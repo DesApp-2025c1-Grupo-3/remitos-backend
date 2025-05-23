@@ -10,9 +10,9 @@ const storage = multer.diskStorage({
     const ext = path.extname(file.originalname);
     const nuevoNombre = `remito-${Date.now()}${ext}`;
     cb(null, nuevoNombre);
-  },
+  }
 });
 module.exports = multer({
-  storage,
+  storage
 }); ///PERMITE CARGAR ARCHIVO EN ARCHIVO ADJUNTO
 //# sourceMappingURL=upload.js.map

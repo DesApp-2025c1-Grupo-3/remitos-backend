@@ -1,27 +1,33 @@
-const { includes } = require("lodash");
+const {
+  includes
+} = require("lodash");
 
-const { Remito, Cliente, Destino, Contacto, Estado } = require("../models");
+const {
+  Remito,
+  Cliente,
+  Destino,
+  Contacto,
+  Estado
+} = require("../models");
 
-const { message } = require("../schemas/estadoSchema");
+const {
+  message
+} = require("../schemas/estadoSchema");
 
 const controller = {};
 
 const getRemitos = async (req, res) => {
   const remitos = await Remito.findAll({
-    include: [
-      {
-        model: Destino,
-        as: "destino",
-      },
-      {
-        model: Cliente,
-        as: "cliente",
-      },
-      {
-        model: Estado,
-        as: "estado",
-      },
-    ],
+    include: [{
+      model: Destino,
+      as: "destino"
+    }, {
+      model: Cliente,
+      as: "cliente"
+    }, {
+      model: Estado,
+      as: "estado"
+    }]
   });
   res.status(200).json(remitos);
 };
@@ -31,20 +37,16 @@ controller.getRemitos = getRemitos;
 const getRemitoById = async (req, res) => {
   const id = req.params.id;
   const remito = await Remito.findByPk(id, {
-    include: [
-      {
-        model: Destino,
-        as: "destino",
-      },
-      {
-        model: Cliente,
-        as: "cliente",
-      },
-      {
-        model: Estado,
-        as: "estado",
-      },
-    ],
+    include: [{
+      model: Destino,
+      as: "destino"
+    }, {
+      model: Cliente,
+      as: "cliente"
+    }, {
+      model: Estado,
+      as: "estado"
+    }]
   });
   res.status(200).json(remito);
 };
@@ -63,7 +65,7 @@ const createRemito = async (req, res) => {
     cantidadBultos,
     cantidadPallets,
     requisitosEspeciales,
-    observaciones,
+    observaciones
   } = req.body;
   const fechaEmision = new Date();
   const archivoEnviado = req.file?.path || null;
@@ -80,7 +82,7 @@ const createRemito = async (req, res) => {
     cantidadPallets,
     requisitosEspeciales,
     observaciones,
-    archivoAdjunto: archivoEnviado,
+    archivoAdjunto: archivoEnviado
   });
   res.status(201).json(remito);
 };
@@ -101,7 +103,7 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
     requisitosEspeciales,
     observaciones,
     clienteId,
-    destinoId,
+    destinoId
   } = req.body;
   const archivoEnviado = req.file?.path || null;
   const fechaEmision = new Date();
@@ -121,19 +123,16 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
     archivoAdjunto: archivoEnviado,
     clienteId,
     destinoId,
-    estadoId: 1,
+    estadoId: 1
   });
   const remitoWithDestinoAndCliente = await Remito.findByPk(remito.id, {
-    include: [
-      {
-        model: Destino,
-        as: "destino",
-      },
-      {
-        model: Cliente,
-        as: "cliente",
-      },
-    ],
+    include: [{
+      model: Destino,
+      as: "destino"
+    }, {
+      model: Cliente,
+      as: "cliente"
+    }]
   });
   res.status(201).json(remitoWithDestinoAndCliente);
 };
@@ -155,7 +154,7 @@ const updateRemito = async (req, res) => {
     cantidadPallets,
     requisitosEspeciales,
     observaciones,
-    archivoAdjunto,
+    archivoAdjunto
   } = req.body;
   const remito = await Remito.findByPk(idRemito);
   await remito.update({
@@ -171,7 +170,7 @@ const updateRemito = async (req, res) => {
     cantidadPallets,
     requisitosEspeciales,
     observaciones,
-    archivoAdjunto,
+    archivoAdjunto
   });
   res.status(200).json(remito);
 };
@@ -183,23 +182,19 @@ const updateEstadoRemito = async (req, res) => {
   const estId = req.params.eid;
   const remito = await Remito.findByPk(remitoId);
   await remito.update({
-    estadoId: estId,
+    estadoId: estId
   });
   const remitoActualizado = await Remito.findByPk(remitoId, {
-    include: [
-      {
-        model: Cliente,
-        as: "cliente",
-      },
-      {
-        model: Destino,
-        as: "destino",
-      },
-      {
-        model: Estado,
-        as: "estado",
-      },
-    ],
+    include: [{
+      model: Cliente,
+      as: "cliente"
+    }, {
+      model: Destino,
+      as: "destino"
+    }, {
+      model: Estado,
+      as: "estado"
+    }]
   });
   res.status(200).json(remitoActualizado);
 };
@@ -211,7 +206,7 @@ const deleteRemito = async (req, res) => {
   const remito = await Remito.findByPk(id);
   await remito.destroy();
   res.status(200).json({
-    message: "Remito eliminado correctamente",
+    message: "Remito eliminado correctamente"
   });
 };
 

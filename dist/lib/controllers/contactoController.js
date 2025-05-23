@@ -1,8 +1,16 @@
-const { where } = require("sequelize");
+const {
+  where
+} = require("sequelize");
 
-const { Contacto, Cliente, Destino } = require("../models");
+const {
+  Contacto,
+  Cliente,
+  Destino
+} = require("../models");
 
-const { message } = require("../schemas/estadoSchema");
+const {
+  message
+} = require("../schemas/estadoSchema");
 
 const controller = {};
 
@@ -10,8 +18,8 @@ const getContacto = async (req, res) => {
   const contactos = await Contacto.findAll({
     include: {
       model: Cliente,
-      as: "cliente",
-    },
+      as: "cliente"
+    }
   });
   res.status(200).json(contactos);
 };
@@ -21,16 +29,13 @@ controller.getContacto = getContacto;
 const getContactoById = async (req, res) => {
   const id = req.params.id;
   const contacto = await Contacto.findByPk(id, {
-    include: [
-      {
-        model: Cliente,
-        as: "cliente",
-      },
-      {
-        model: Destino,
-        as: "destino",
-      },
-    ],
+    include: [{
+      model: Cliente,
+      as: "cliente"
+    }, {
+      model: Destino,
+      as: "destino"
+    }]
   });
   res.status(200).json(contacto);
 };
@@ -49,11 +54,11 @@ const deleteContacto = async (req, res) => {
   const idContacto = req.params.id;
   const contacto = await Contacto.destroy({
     where: {
-      id: idContacto,
-    },
+      id: idContacto
+    }
   });
   res.status(200).json({
-    message: "Contacto eliminado correctamente",
+    message: "Contacto eliminado correctamente"
   });
 };
 
@@ -61,12 +66,16 @@ controller.deleteContacto = deleteContacto;
 
 const updateContacto = async (req, res) => {
   const id = req.params.id;
-  const { personaAutoriza, correoElectronico, telefono } = req.body;
+  const {
+    personaAutoriza,
+    correoElectronico,
+    telefono
+  } = req.body;
   const contacto = await Contacto.findByPk(id);
   await contacto.update({
     personaAutoriza,
     correoElectronico,
-    telefono,
+    telefono
   });
   res.status(200).json(contacto);
 };
