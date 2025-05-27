@@ -43,5 +43,6 @@ app.use(rutas.rutasContacto);
 app.use(rutas.rutasEstado);
 app.use(rutas.rutasDestino);
 app.use(rutas.rutasRemito);
+app.use(rutas.rutasMercaderia);
 module.exports = app;
 //# sourceMappingURL=app.js.map

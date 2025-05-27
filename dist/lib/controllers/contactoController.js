@@ -50,20 +50,6 @@ const createContacto = async (req, res) => {
 
 controller.createContacto = createContacto;
 
-const deleteContacto = async (req, res) => {
-  const idContacto = req.params.id;
-  const contacto = await Contacto.destroy({
-    where: {
-      id: idContacto
-    }
-  });
-  res.status(200).json({
-    message: "Contacto eliminado correctamente"
-  });
-};
-
-controller.deleteContacto = deleteContacto;
-
 const updateContacto = async (req, res) => {
   const id = req.params.id;
   const {
@@ -80,6 +66,29 @@ const updateContacto = async (req, res) => {
   res.status(200).json(contacto);
 };
 
-controller.updateContacto = updateContacto;
+controller.updateContacto = updateContacto; // Se elimina el contacto marcándolo como inactivo, no se elimina de la base de datos.
+
+const deleteContacto = async (req, res) => {
+  const contactoId = req.params.id;
+  const contacto = await Contacto.findByPk(contactoId);
+  await contacto.update({
+    activo: false
+  });
+  res.status(200).json({
+    message: "Contacto eliminado."
+  });
+};
+
+controller.deleteContacto = deleteContacto;
+/* // Si se quiere eliminar de la base de datos, se puede usar este método
+   //  pero es mejor usar un campo activo para no perder el historial de contactos.
+const deleteContacto = async (req, res) => {
+  const idContacto = req.params.id;
+  const contacto = await Contacto.destroy({ where: { id: idContacto } });
+  res.status(200).json({ message: "Contacto eliminado correctamente" });
+};
+controller.deleteContacto = deleteContacto;
+*/
+
 module.exports = controller;
 //# sourceMappingURL=contactoController.js.map

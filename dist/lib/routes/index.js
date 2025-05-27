@@ -9,11 +9,14 @@ const rutasDestino = require("./destino.route");
 
 const rutasRemito = require("./remito.routes");
 
+const rutasMercaderia = require("./mercaderia.routes");
+
 module.exports = {
   rutasEstado,
   rutasCliente,
   rutasContacto,
   rutasDestino,
-  rutasRemito
+  rutasRemito,
+  rutasMercaderia
 };
 //# sourceMappingURL=index.js.map

@@ -82,20 +82,6 @@ const createClienteWithContacto = async (req, res) => {
 
 controller.createClienteWithContacto = createClienteWithContacto;
 
-const deleteCliente = async (req, res) => {
-  const idCliente = req.params.id;
-  const cliente = await Cliente.destroy({
-    where: {
-      id: idCliente
-    }
-  });
-  res.status(200).json({
-    message: "Cliente eliminado correctamente"
-  });
-};
-
-controller.deleteCliente = deleteCliente;
-
 const updateCliente = async (req, res) => {
   const idCliente = req.params.id;
   const {
@@ -114,6 +100,29 @@ const updateCliente = async (req, res) => {
   res.status(200).json(cliente);
 };
 
-controller.updateCliente = updateCliente;
+controller.updateCliente = updateCliente; // Se elimina el cliente marcándolo como inactivo, no se elimina de la base de datos.
+
+const deleteCliente = async (req, res) => {
+  const clienteId = req.params.id;
+  const cliente = await Cliente.findByPk(clienteId);
+  await cliente.update({
+    activo: false
+  });
+  res.status(200).json({
+    message: "Cliente eliminado."
+  });
+};
+
+controller.deleteCliente = deleteCliente;
+/* // Si se quiere eliminar de la base de datos, se puede usar este método
+   //  pero es mejor usar un campo activo para no perder el historial de clientes.
+const deleteCliente = async (req, res) => {
+  const idCliente = req.params.id;
+  const cliente = await Cliente.destroy({ where: { id: idCliente } });
+  res.status(200).json({ message: "Cliente eliminado correctamente" });
+};
+controller.deleteCliente = deleteCliente;
+*/
+
 module.exports = controller;
 //# sourceMappingURL=clienteController.js.map

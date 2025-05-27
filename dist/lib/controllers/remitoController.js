@@ -199,17 +199,29 @@ const updateEstadoRemito = async (req, res) => {
   res.status(200).json(remitoActualizado);
 };
 
-controller.updateEstadoRemito = updateEstadoRemito;
+controller.updateEstadoRemito = updateEstadoRemito; // Este es el metodo de eliminación que lo marca como inactivo
 
 const deleteRemito = async (req, res) => {
-  const id = req.params.id;
-  const remito = await Remito.findByPk(id);
-  await remito.destroy();
+  const remitoId = req.params.id;
+  const remito = await Remito.findByPk(remitoId);
+  await remito.update({
+    activo: false
+  });
   res.status(200).json({
-    message: "Remito eliminado correctamente"
+    message: "Remito eliminado."
   });
 };
 
 controller.deleteRemito = deleteRemito;
+/*   // Este es el metodo de eliminación que lo borra del todo
+const deleteRemito = async (req, res) => {
+  const id = req.params.id;
+  const remito = await Remito.findByPk(id);
+  await remito.destroy();
+  res.status(200).json({ message: "Remito eliminado correctamente" });
+};
+controller.deleteRemito = deleteRemito;
+*/
+
 module.exports = controller;
 //# sourceMappingURL=remitoController.js.map
