@@ -21,12 +21,12 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Estado.init({
-    descripcion: DataTypes.STRING
-    /* activo: {
-      type: DataTypes.BOOLEAN,            // Si se quiere tener un campo activo o no, para eliminarlo
-      defaultValue: true,
-    },*/
-
+    descripcion: DataTypes.STRING,
+    activo: {
+      type: DataTypes.BOOLEAN,
+      // Si se quiere tener un campo activo o no, para eliminarlo
+      defaultValue: true
+    }
   }, {
     sequelize,
     modelName: "Estado"

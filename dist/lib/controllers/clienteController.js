@@ -18,6 +18,10 @@ const controller = {};
 
 const getCliente = async (req, res) => {
   const clientes = await Cliente.findAll({
+    where: {
+      activo: true
+    },
+    // Solo trae clientes activos
     include: {
       model: Contacto,
       as: "contactos"

@@ -18,6 +18,10 @@ const controller = {};
 
 const getRemitos = async (req, res) => {
   const remitos = await Remito.findAll({
+    where: {
+      activo: true
+    },
+    // Solo trae remitos activos
     include: [{
       model: Destino,
       as: "destino"

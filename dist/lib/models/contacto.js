@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Contacto.init({
     personaAutorizada: DataTypes.STRING,
+    //Falta activo
     correoElectronico: DataTypes.STRING,
     telefono: DataTypes.INTEGER
   }, {

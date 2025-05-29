@@ -23,7 +23,8 @@ const getMercaderia = async (req, res) => {
     where: {
       activo: true
     }
-  }, {
+  }, // Solo trae mercadería activa
+  {
     include: {
       model: Estado,
       as: "estado"

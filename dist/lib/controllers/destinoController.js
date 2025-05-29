@@ -15,6 +15,10 @@ const controller = {};
 
 const getDestino = async (req, res) => {
   const destinos = await Destino.findAll({
+    where: {
+      activo: true
+    },
+    // Solo trae destinos activos
     include: {
       model: Contacto,
       as: "contactos"
