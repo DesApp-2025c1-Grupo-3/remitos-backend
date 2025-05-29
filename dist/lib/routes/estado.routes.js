@@ -17,7 +17,7 @@ route.get("/estado/:id", estadoMiddleware.validateEstadoId, estadoController.get
 
 route.post("/estado", schemaValidator(estadoSchema), estadoController.createEstado); //Edita un estado
 
-route.put("/estado/:id", schemaValidator(estadoSchema), estadoController.updateEstado); //Borra un estado
+route.put("/estado/:id", schemaValidator(estadoSchema), estadoMiddleware.validateEstadoId, estadoController.updateEstado); //Borra un estado
 
 route.delete("/estado/:id", estadoMiddleware.validateEstadoId, estadoController.deleteEstado);
 module.exports = route;

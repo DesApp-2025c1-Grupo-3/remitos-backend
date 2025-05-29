@@ -37,7 +37,10 @@ controller.getEstadoById = getEstadoById; // Este crea al estado con "activo" y 
 const createEstado = async (req, res) => {
   const estado = req.body;
   const estadoNuevo = await Estado.create(estado);
-  res.status(201).json(estadoNuevo);
+  res.status(201).json({
+    message: "Estado Creado",
+    estado
+  });
 };
 
 controller.createEstado = createEstado;
@@ -53,54 +56,27 @@ controller.createEstado = createEstado;
 
 const updateEstado = async (req, res) => {
   const idEstado = req.params.id;
-  const {
-    descripcion
-  } = req.body;
-  const estado = await Estado.findByPk(idEstado); //Arreglar para que a los estados inactivos no los traiga
-
-  if (estado.activo === false) {
-    return res.status(404).json({
-      message: "Estado no encontrado"
-    });
-  }
-
-  await estado.update({
-    descripcion
-  });
+  const estadoActualizado = req.body;
+  const estado = await Estado.findByPk(idEstado);
+  await estado.update(estadoActualizado);
   res.status(200).json({
     message: "Estado Actualizado",
     estado
   });
 };
 
-controller.updateEstado = updateEstado;
+controller.updateEstado = updateEstado; // Se elimina el estado marcándolo como inactivo, no se elimina de la base de datos.
 
 const deleteEstado = async (req, res) => {
-  try {
-    const estadoId = req.params.id;
-    const estado = await Estado.findByPk(estadoId);
-
-    if (!estado || !estado.activo) {
-      return res.status(404).json({
-        message: "Estado no encontrado o inactivo."
-      });
-    }
-
-    await estado.update({
-      activo: false
-    });
-    await estado.reload(); // refresca estado con el nuevo valor
-
-    return res.status(200).json({
-      message: "Estado eliminado (lógicamente).",
-      estado
-    });
-  } catch (error) {
-    console.error("Error en deleteEstado:", error);
-    return res.status(500).json({
-      message: "Error al eliminar el estado."
-    });
-  }
+  const estadoId = req.params.id;
+  const estado = await Estado.findByPk(estadoId);
+  await estado.update({
+    activo: false
+  });
+  res.status(200).json({
+    message: "Estado Eliminado",
+    estado
+  });
 };
 
 controller.deleteEstado = deleteEstado;

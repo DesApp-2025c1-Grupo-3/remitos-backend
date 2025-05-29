@@ -5,12 +5,15 @@ const {
 const middleware = {};
 
 const validateEstadoId = async (req, res, next) => {
-  const id = req.params.id;
+  const {
+    id
+  } = req.params;
   const estado = await Estado.findByPk(id);
 
-  if (!estado) {
-    res.status(404).json({
-      message: `El estado con id ${id} no existe`
+  if (!estado || !estado.activo) {
+    // Check if the estado exists and is active
+    return res.status(404).json({
+      message: "Estado no encontrado o inactivo."
     });
   }
 

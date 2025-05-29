@@ -56,7 +56,7 @@ const getRemitoById = async (req, res) => {
 };
 
 controller.getRemitoById = getRemitoById;
-
+/*
 const createRemito = async (req, res) => {
   const {
     numeroAsignado,
@@ -69,28 +69,27 @@ const createRemito = async (req, res) => {
     cantidadBultos,
     cantidadPallets,
     requisitosEspeciales,
-    observaciones
+    observaciones,
   } = req.body;
   const fechaEmision = new Date();
   const archivoEnviado = req.file?.path || null;
   const remito = await Remito.create({
     numeroAsignado,
-    tipoMercaderia,
-    valorDeclarado,
-    volumenMetrosCubico,
-    pesoMercaderia,
     fechaEmision,
-    cantidadBobinas,
-    cantidadRacks,
-    cantidadBultos,
-    cantidadPallets,
-    requisitosEspeciales,
     observaciones,
-    archivoAdjunto: archivoEnviado
+    archivoAdjunto: archivoEnviado,
   });
   res.status(201).json(remito);
 };
+*/
 
+const createRemito = async (req, res) => {
+  const remito = req.body;
+  const remitoNuevo = await Remito.create(remito);
+  res.status(201).json(remitoNuevo);
+};
+
+controller.createRemito = createRemito;
 controller.createRemito = createRemito;
 
 const createRemitoWithClienteAndDestino = async (req, res) => {
