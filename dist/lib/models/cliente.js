@@ -41,6 +41,11 @@ module.exports = (sequelize, DataTypes) => {
     activo: {
       type: DataTypes.BOOLEAN,
       defaultValue: true
+    },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      // Si se quiere tener un campo activo o no, para eliminarlo
+      defaultValue: true
     }
   }, {
     sequelize,

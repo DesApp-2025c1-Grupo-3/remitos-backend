@@ -21,7 +21,7 @@ route.get("/destino/:id", destinoMiddleware.validateDestinoId, destinoController
 
 route.get("/destinoFiltrado", destinoMiddleware.validarFiltroDestino, destinoController.getDestinoFiltrado); //Crea un cliente
 
-route.post("/destino", schemaValidator(destinoSchema), destinoController.createDestino); //Crea un cliente y asocia un cliente que tambien crea
+route.post("/destino", schemaValidator(destinoSchema), destinoController.createDestino); //Crea un destino y asocia un contacto que tambien crea
 
 route.post("/destinoContacto", schemaValidator(destinoContactoSchema), destinoController.createDestinoWithContacto); //Edita un destino
 

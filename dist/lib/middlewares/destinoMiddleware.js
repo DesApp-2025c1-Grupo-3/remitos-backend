@@ -5,12 +5,12 @@ const {
 const middleware = {};
 
 const validateDestinoId = async (req, res, next) => {
-  const id = req.params.id;
-  const estado = await Destino.findByPk(id);
+  const destinoId = req.params.id;
+  const destino = await Destino.findByPk(destinoId);
 
-  if (!estado) {
-    res.status(404).json({
-      message: `El estado con id ${id} no existe`
+  if (!destino || !destino.activo) {
+    return res.status(404).json({
+      message: `El estado con id ${destinoId} no existe`
     });
   }
 
@@ -21,6 +21,7 @@ middleware.validateDestinoId = validateDestinoId;
 
 const validarFiltroDestino = (req, res, next) => {
   const {
+    name,
     pais,
     provincia,
     localidad
@@ -28,6 +29,7 @@ const validarFiltroDestino = (req, res, next) => {
   const soloLetras = /^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$/;
 
   for (const [campo, valor] of Object.entries({
+    name,
     pais,
     provincia,
     localidad

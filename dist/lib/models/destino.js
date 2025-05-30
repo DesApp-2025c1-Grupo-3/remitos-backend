@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Destino.init({
-    nombre: DataTypes.STRING,
+    name: DataTypes.STRING,
     pais: DataTypes.STRING,
     provincia: DataTypes.STRING,
     localidad: DataTypes.STRING,

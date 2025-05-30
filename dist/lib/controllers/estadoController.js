@@ -39,7 +39,7 @@ const createEstado = async (req, res) => {
   const estadoNuevo = await Estado.create(estado);
   res.status(201).json({
     message: "Estado Creado",
-    estado
+    estadoNuevo
   });
 };
 

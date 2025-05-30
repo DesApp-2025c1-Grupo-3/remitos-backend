@@ -25,9 +25,12 @@ module.exports = (sequelize, DataTypes) => {
 
   Contacto.init({
     personaAutorizada: DataTypes.STRING,
-    //Falta activo
     correoElectronico: DataTypes.STRING,
-    telefono: DataTypes.INTEGER
+    telefono: DataTypes.INTEGER,
+    activo: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    }
   }, {
     sequelize,
     modelName: "Contacto"
