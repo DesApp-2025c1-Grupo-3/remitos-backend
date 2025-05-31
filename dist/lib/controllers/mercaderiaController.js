@@ -122,5 +122,16 @@ const deleteMercaderia = async (req, res) => {
 };
 
 controller.deleteMercaderia = deleteMercaderia;
+
+const activateMercaderia = async (req, res) => {
+  const mercaderiaId = req.params.id;
+  const mercaderia = await Mercaderia.findByPk(mercaderiaId);
+  await mercaderia.update({
+    activo: true,
+  });
+  res.status(200).json(mercaderia);
+};
+
+controller.activateMercaderia = activateMercaderia;
 module.exports = controller;
 //# sourceMappingURL=mercaderiaController.js.map

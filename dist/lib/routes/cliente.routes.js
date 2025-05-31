@@ -2,23 +2,52 @@ const express = require("express");
 
 const route = express.Router();
 
+const { Cliente } = require("../models");
+
 const clienteController = require("../controllers/clienteController");
 
 const schemaValidator = require("../middlewares/schemaValidator");
 
 const clienteSchema = require("../schemas/clienteSchema");
 
-const clienteMiddleware = require("../middlewares/clienteMiddleware");
+const clienteMiddleware = require("../middlewares/validateMiddleware"); //Trae todos los clientes
 
-route.get("/cliente", clienteController.getCliente);
-route.get("/cliente/:id", clienteMiddleware.validateClienteId, clienteController.getClienteById); //Crea un cliente
+route.get("/cliente", clienteController.getCliente); //Trae todos los clientes por ID
 
-route.post("/cliente", schemaValidator(clienteSchema), clienteController.createCliente); //Crea un cliente y asocia un cliente que tambien crea
+route.get(
+  "/cliente/:id",
+  clienteMiddleware.validateId(Cliente),
+  clienteController.getClienteById
+); //Crea un cliente -solo cliente-
 
-route.post("/clienteContacto", clienteController.createClienteWithContacto); //Edita un cliente
+route.post(
+  "/cliente",
+  schemaValidator(clienteSchema),
+  clienteController.createCliente
+); //Crea un cliente y un contacto asociando ambos
 
-route.put("/cliente/:id", schemaValidator(clienteSchema), clienteController.updateCliente); //Borra un cliente
+route.post(
+  "/clienteContacto",
+  schemaValidator(clienteSchema),
+  clienteController.createClienteWithContacto
+); //Edita un cliente
 
-route.delete("/cliente/:id", clienteMiddleware.validateClienteId, clienteController.deleteCliente);
+route.put(
+  "/cliente/:id",
+  schemaValidator(clienteSchema),
+  clienteController.updateCliente
+); //Da de alta un cliente borrado
+
+route.put(
+  "/cliente/:id/darAlta",
+  clienteMiddleware.validateId(Cliente),
+  clienteController.activateCliente
+); //Borra un cliente
+
+route.delete(
+  "/cliente/:id",
+  clienteMiddleware.validateId(Cliente),
+  clienteController.deleteCliente
+);
 module.exports = route;
 //# sourceMappingURL=cliente.routes.js.map

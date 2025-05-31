@@ -2,28 +2,39 @@ const express = require("express");
 
 const route = express.Router();
 
-const mercaderiaController = require("../controllers/mercaderiaController"); //const schemaValidator = require("../middlewares/schemaValidator");
-//const clienteSchema = require("../schemas/clienteSchema");
-//const clienteMiddleware = require("../middlewares/clienteMiddleware");
+const { Mercaderia } = require("../models");
 
-route.get("/mercaderias", mercaderiaController.getMercaderia);
+const mercaderiaController = require("../controllers/mercaderiaController");
+
+const schemaValidator = require("../middlewares/schemaValidator");
+
+const mercaderiaSchema = require("../schemas/mercaderiaSchema");
+
+const middleware = require("../middlewares/validateMiddleware"); //Trae todas las mercaderias
+
+route.get("/mercaderias", mercaderiaController.getMercaderia); //Trae una mercaderia por ID
+
 route.get(
-  "/mercaderias/:id", //clienteMiddleware.validateClienteId,
+  "/mercaderias/:id",
+  middleware.validateId(Mercaderia),
   mercaderiaController.getMercaderiaById
-); //Crea un cliente
+); //Crea una mercaderia
 
 route.post(
-  "/mercaderias", //schemaValidator(clienteSchema),
+  "/mercaderias",
+  schemaValidator(mercaderiaSchema),
   mercaderiaController.createMercaderia
-); //Crea un cliente y asocia un cliente que tambien crea
+); //Edita una mercaderia
 
 route.put(
-  "/mercaderias/:id", //schemaValidator(clienteSchema),
+  "/mercaderias/:id",
+  schemaValidator(mercaderiaSchema),
   mercaderiaController.updateMercaderia
 ); //Borra un cliente
 
 route.delete(
-  "/mercaderias/:id", //clienteMiddleware.validateClienteId,
+  "/mercaderias/:id",
+  middleware.validateId(Mercaderia),
   mercaderiaController.deleteMercaderia
 );
 module.exports = route;
