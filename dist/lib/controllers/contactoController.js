@@ -49,7 +49,10 @@ controller.getContactoById = getContactoById;
 const createContacto = async (req, res) => {
   const contacto = req.body;
   const nuevoContacto = await Contacto.create(contacto);
-  res.status(201).json(nuevoContacto);
+  res.status(201).json({
+    message: "Contacto Creado",
+    nuevoContacto
+  });
 };
 
 controller.createContacto = createContacto;
@@ -67,7 +70,10 @@ const updateContacto = async (req, res) => {
     correoElectronico,
     telefono
   });
-  res.status(200).json(contacto);
+  res.status(200).json({
+    message: "Contacto Actualizado",
+    contacto
+  });
 };
 
 controller.updateContacto = updateContacto; // Se elimina el contacto marcándolo como inactivo, no se elimina de la base de datos.
@@ -79,7 +85,8 @@ const deleteContacto = async (req, res) => {
     activo: false
   });
   res.status(200).json({
-    message: "Contacto eliminado."
+    message: "Contacto eliminado.",
+    contacto
   });
 };
 

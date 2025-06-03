@@ -6,11 +6,11 @@ const middleware = {};
 
 const validateRemitoId = async (req, res, next) => {
   const id = req.params.id;
-  const estado = await Remito.findByPk(id);
+  const remito = await Remito.findByPk(id);
 
-  if (!estado) {
-    res.status(404).json({
-      message: `El estado con id ${id} no existe`
+  if (!remito) {
+    return res.status(404).json({
+      message: `El remito con id ${id} no existe`
     });
   }
 

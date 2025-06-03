@@ -6,11 +6,11 @@ const middleware = {};
 
 const validateContactoId = async (req, res, next) => {
   const id = req.params.id;
-  const estado = await Contacto.findByPk(id);
+  const contacto = await Contacto.findByPk(id);
 
-  if (!estado) {
-    res.status(404).json({
-      message: `El estado con id ${id} no existe`
+  if (!contacto || !contacto.activo) {
+    return res.status(404).json({
+      message: `El contacto con id ${id} no existe`
     });
   }
 
