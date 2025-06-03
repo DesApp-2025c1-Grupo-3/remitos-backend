@@ -85,36 +85,21 @@ controller.createDestino = createDestino;
 
 const createDestinoWithContacto = async (req, res) => {
   const {
-    name,
-    pais,
-    provincia,
-    localidad,
-    direccion,
-    personaAutorizada,
-    correoElectronico,
-    telefono
-  } = req.body; // Primero creo el destino
-
+    destino,
+    contacto
+  } = req.body;
   const destinoNuevo = await Destino.create({
-    name,
-    pais,
-    provincia,
-    localidad,
-    direccion
-  }); // Luego creo el contacto asociado
-
+    name: destino.name,
+    pais: destino.pais,
+    provincia: destino.provincia,
+    localidad: destino.localidad,
+    direccion: destino.direccion
+  });
   const nuevoContacto = await Contacto.create({
-    personaAutorizada,
-    correoElectronico,
-    telefono,
+    personaAutorizada: contacto.personaAutorizada,
+    correoElectronico: contacto.correoElectronico,
+    telefono: contacto.telefono,
     destinoId: destinoNuevo.id
-  }); // Traigo el destino con contactos para responder
-
-  const destinoConContacto = await Destino.findByPk(destinoNuevo.id, {
-    include: {
-      model: Contacto,
-      as: "contactos"
-    }
   });
   res.status(201).json({
     message: "Destino Creado con contacto",
