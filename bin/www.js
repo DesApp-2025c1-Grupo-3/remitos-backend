@@ -8,7 +8,7 @@ const debugPkg = require("debug");
 const http = require("http");
 const app = require("../lib/app");
 const db = require("../lib/models");
-
+const redisClient = require("../lib/config/redis");
 const debug = debugPkg("js/www:server");
 
 /**
@@ -25,12 +25,16 @@ if (!port) {
 }
 
 // Run sequelize before listen
-db.sequelize
-  .authenticate()
+redisClient
+  .connect()
+  .then(() => {
+    console.log("✅ Conexión a Redis exitosa");
+
+    return db.sequelize.authenticate();
+  })
   .then(() => {
     console.log("✅ Conexión a la base de datos exitosa");
 
-    // Aquí agregamos el sync
     return db.sequelize.sync({ alter: true });
     // alter:true ajusta las tablas si hay cambios (más seguro que force:true)
   })

@@ -14,6 +14,8 @@ const app = require("../lib/app");
 
 const db = require("../lib/models");
 
+const redisClient = require("../lib/config/redis");
+
 const debug = debugPkg("js/www:server");
 /**
  * Create HTTP server.
@@ -30,22 +32,31 @@ if (!port) {
   throw "¡¡Hay que setear el port de la aplicación Express!!";
 } // Run sequelize before listen
 
-
-db.sequelize.authenticate().then(() => {
-  console.log("✅ Conexión a la base de datos exitosa"); // Aquí agregamos el sync
-
-  return db.sequelize.sync({
-    alter: true
-  }); // alter:true ajusta las tablas si hay cambios (más seguro que force:true)
-}).then(() => {
-  console.log("📄 Base de datos sincronizada");
-  server.listen(port, () => {
-    console.log(`¡Aplicación iniciada! ====> 🌎 http://localhost:${port}`);
+redisClient
+  .connect()
+  .then(() => {
+    console.log("✅ Conexión a Redis exitosa");
+    return db.sequelize.authenticate();
+  })
+  .then(() => {
+    console.log("✅ Conexión a la base de datos exitosa");
+    return db.sequelize.sync({
+      alter: true,
+    }); // alter:true ajusta las tablas si hay cambios (más seguro que force:true)
+  })
+  .then(() => {
+    console.log("📄 Base de datos sincronizada");
+    server.listen(port, () => {
+      console.log(`¡Aplicación iniciada! ====> 🌎 http://localhost:${port}`);
+    });
+  })
+  .catch((error) => {
+    console.error(
+      "❌ Error conectando o sincronizando la base de datos:",
+      error
+    );
+    process.exit(1);
   });
-}).catch(error => {
-  console.error("❌ Error conectando o sincronizando la base de datos:", error);
-  process.exit(1);
-});
 server.on("error", onError);
 server.on("listening", onListening);
 /**
@@ -77,7 +88,6 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 
 function onListening() {
   const addr = server.address();

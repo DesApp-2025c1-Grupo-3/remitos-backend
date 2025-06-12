@@ -1,11 +1,11 @@
-version: '3'
-
 services:
   db:
     image: postgres:12.5-alpine
     restart: always
     environment:
-      POSTGRES_PASSWORD: admin1234
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: maleyuyu
+      POSTGRES_DB: desApp
       ALLOW_IP_RANGE: 0.0.0.0/0
     ports:
       - "5432:5432"
@@ -14,6 +14,20 @@ services:
       - ./docker/postgres/init:/docker-entrypoint-initdb.d/
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis-container
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker/redis/data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redispass123", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
