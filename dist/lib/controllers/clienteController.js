@@ -1,17 +1,20 @@
-const { Cliente } = require("../models");
+const { Cliente, Contacto } = require("../models");
 
-const { Contacto } = require("../models");
-
-const cliente = require("../config/redis"); // Asumo que 'cliente' es tu cliente Redis
+const cliente = require("../config/redis");
 
 const controller = {};
 
 const getCliente = async (req, res) => {
   try {
-    const page = parseInt(req.params.page) || 1;
-    const limit = parseInt(req.params.limit) || 20;
-    const offset = (page - 1) * limit; // Permite saltear los que son de páginas anteriores
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const cacheKey = `clientes:page:${page}:limit:${limit}`;
+    /*const cacheCliente = await cliente.get(cacheKey);
+    if (cacheCliente) {
+      return res.status(200).json(JSON.parse(cacheCliente));
+    }*/
 
+    const offset = (page - 1) * limit;
     const { count, rows } = await Cliente.findAndCountAll({
       where: {
         activo: true,
@@ -30,6 +33,7 @@ const getCliente = async (req, res) => {
       currentPage: page,
       data: rows,
     };
+    await cliente.set(cacheKey, JSON.stringify(responseData), "EX", 5000);
     return res.status(200).json(responseData);
   } catch (error) {
     console.error("Error en getCliente:", error);
@@ -42,23 +46,31 @@ const getCliente = async (req, res) => {
 controller.getCliente = getCliente;
 
 const getClienteById = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const clienteDB = await Cliente.findByPk(id, {
-      include: {
-        model: Contacto,
-        as: "contactos",
-      },
-    });
+  const id = req.params.id;
+  let clienteData;
 
-    if (!clienteDB) {
-      // Maneja el caso en que el cliente no se encuentra en la DB
-      return res.status(404).json({
-        message: "Cliente no encontrado.",
+  try {
+    const cacheClienteId = await cliente.get(`cliente${id}`);
+
+    if (cacheClienteId) {
+      clienteData = JSON.parse(cacheClienteId);
+    } else {
+      const clienteDB = await Cliente.findByPk(id, {
+        include: {
+          model: Contacto,
+          as: "contactos",
+        },
       });
+      clienteData = clienteDB;
+      await cliente.set(
+        `cliente${id}`,
+        JSON.stringify(clienteData),
+        "EX",
+        5000
+      );
     }
 
-    return res.status(200).json(clienteDB);
+    return res.status(200).json(clienteData);
   } catch (error) {
     console.error("Error en getClienteById:", error);
     return res.status(500).json({
@@ -73,6 +85,7 @@ const createCliente = async (req, res) => {
   try {
     const clienteNuevo = req.body;
     const nuevoCliente = await Cliente.create(clienteNuevo);
+    await cliente.del(`clientes:*`);
     return res.status(201).json(nuevoCliente);
   } catch (error) {
     console.error("Error en createCliente:", error);
@@ -91,60 +104,105 @@ const createClienteWithContacto = async (req, res) => {
       cuit_rut,
       direccion,
       tipoEmpresa,
-      personaAutorizada,
-      correoElectronico,
-      telefono,
+      contactos,
     } = req.body;
     const newCliente = await Cliente.create({
       razonSocial,
       cuit_rut,
       direccion,
       tipoEmpresa,
-    }); // Validar si el cliente se creó correctamente antes de intentar crear un contacto
+    });
 
-    if (!newCliente) {
-      return res.status(500).json({
-        message: "No se pudo crear el cliente.",
+    if (!Array.isArray(contactos) || contactos.length === 0) {
+      return res.status(400).json({
+        message: "Se requiere al menos un contacto.",
       });
     }
 
-    const nuevoContacto = await Contacto.create({
-      personaAutorizada,
-      correoElectronico,
-      telefono,
-      clienteId: newCliente.id,
-    });
+    const nuevosContactos = await Promise.all(
+      contactos.map((contacto) =>
+        Contacto.create({ ...contacto, clienteId: newCliente.id })
+      )
+    );
     const clienteConContactos = await Cliente.findByPk(newCliente.id, {
       include: {
         model: Contacto,
         as: "contactos",
       },
     });
+    await cliente.del(`clientes:*`);
+    const page = 1;
+    const limit = 20;
+    const offset = (page - 1) * limit;
+    const cacheKey = `clientes:page:${page}:limit:${limit}`;
+    const { count, rows } = await Cliente.findAndCountAll({
+      where: {
+        activo: true,
+      },
+      include: {
+        model: Contacto,
+        as: "contactos",
+      },
+      limit,
+      offset,
+      order: [["createdAt", "DESC"]],
+    });
+    const responseData = {
+      totalItems: count,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      data: rows,
+    };
+    await cliente.set(cacheKey, JSON.stringify(responseData), "EX", 5000);
     return res.status(200).json(clienteConContactos);
   } catch (error) {
     console.error("Error en createClienteWithContacto:", error);
     return res.status(500).json({
-      message: "Error interno del servidor al crear cliente con contacto.",
+      message: "Error interno del servidor al crear cliente con contactos.",
     });
   }
 };
 
 controller.createClienteWithContacto = createClienteWithContacto;
 
+const addContactoToCliente = async (req, res) => {
+  try {
+    const idCliente = req.params.id;
+    const nuevoCliente = req.body;
+    const cliente = await Cliente.findByPk(idCliente);
+    await cliente.createContacto(nuevoCliente);
+    const clienteActualizado = await Cliente.findByPk(idCliente, {
+      include: {
+        model: Contacto,
+        as: "contactos",
+      },
+    });
+    await cliente.set(
+      `cliente${idCliente}`,
+      JSON.stringify(clienteActualizado),
+      "EX",
+      5000
+    );
+    return res.status(200).json(clienteActualizado);
+  } catch (error) {
+    console.error("Error en cargar contacto:", error);
+    return res.status(500).json({
+      message: "Error al cargar contacto",
+    });
+  }
+};
+
+controller.addContactoToCliente = addContactoToCliente;
+
 const deleteCliente = async (req, res) => {
   try {
     const idCliente = req.params.id;
     const clienteToDelete = await Cliente.findByPk(idCliente);
-
-    if (!clienteToDelete) {
-      return res.status(404).json({
-        message: "Cliente no encontrado para eliminar.",
-      });
-    }
-
     await clienteToDelete.update({
       activo: false,
     });
+    await cliente.del(`cliente${idCliente}`);
+    await cliente.del(`clientes:*`);
     return res.status(200).json({
       message: "Cliente eliminado correctamente",
     });
@@ -162,16 +220,11 @@ const activateCliente = async (req, res) => {
   try {
     const idCliente = req.params.id;
     const clienteToActivate = await Cliente.findByPk(idCliente);
-
-    if (!clienteToActivate) {
-      return res.status(404).json({
-        message: "Cliente no encontrado para activar.",
-      });
-    }
-
     await clienteToActivate.update({
       activo: true,
     });
+    await cliente.del(`cliente${idCliente}`);
+    await cliente.del(`clientes:*`);
     return res.status(200).json(clienteToActivate);
   } catch (error) {
     console.error("Error en activateCliente:", error);
@@ -188,19 +241,14 @@ const updateCliente = async (req, res) => {
     const idCliente = req.params.id;
     const { razonSocial, cuit_rut, direccion, tipoEmpresa } = req.body;
     const clienteToUpdate = await Cliente.findByPk(idCliente);
-
-    if (!clienteToUpdate) {
-      return res.status(404).json({
-        error: "Cliente no encontrado",
-      });
-    }
-
     await clienteToUpdate.update({
       razonSocial,
       cuit_rut,
       direccion,
       tipoEmpresa,
     });
+    await cliente.del(`cliente${idCliente}`);
+    await cliente.del(`clientes:*`);
     return res.status(200).json(clienteToUpdate);
   } catch (error) {
     console.error("Error en updateCliente:", error);

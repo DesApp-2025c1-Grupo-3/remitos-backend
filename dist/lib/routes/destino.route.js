@@ -12,7 +12,9 @@ const destinoSchema = require("../schemas/destinoSchema"); // Solo destino
 
 const destinoContactoSchema = require("../schemas/destinoContactoSchema"); //Destino con Contacto
 
-const destinoMiddleware = require("../middlewares/validateMiddleware"); //Trae todos los destinos
+const destinoMiddleware = require("../middlewares/validateMiddleware");
+
+const contactoSchema = require("../schemas/contactoSchema"); //Trae todos los destinos
 
 route.get("/destino", destinoController.getDestino); //Trae destino por ID
 
@@ -37,6 +39,13 @@ route.post(
   "/destinoContacto",
   schemaValidator(destinoContactoSchema),
   destinoController.createDestinoWithContacto
+); //Agregar otro contacto a Destino
+
+route.post(
+  "/agregarContactoADestino/:id",
+  destinoMiddleware.validateId(Destino),
+  schemaValidator(contactoSchema),
+  destinoController.addContactoToDestino
 ); //Edita un destino
 
 route.put(

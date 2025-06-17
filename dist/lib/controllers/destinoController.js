@@ -2,8 +2,6 @@ const { where } = require("sequelize");
 
 const { Destino, Contacto } = require("../models");
 
-const { message } = require("../schemas/estadoSchema");
-
 const controller = {};
 
 const getDestino = async (req, res) => {
@@ -69,16 +67,7 @@ const createDestino = async (req, res) => {
 controller.createDestino = createDestino;
 
 const createDestinoWithContacto = async (req, res) => {
-  const {
-    nombre,
-    pais,
-    provincia,
-    localidad,
-    direccion,
-    personaAutorizada,
-    correoElectronico,
-    telefono,
-  } = req.body;
+  const { nombre, pais, provincia, localidad, direccion, contactos } = req.body;
   const destino = await Destino.create({
     nombre,
     pais,
@@ -86,12 +75,18 @@ const createDestinoWithContacto = async (req, res) => {
     localidad,
     direccion,
   });
-  const nuevoContacto = await Contacto.create({
-    personaAutorizada,
-    correoElectronico,
-    telefono,
-    destinoId: destino.id,
-  });
+
+  if (!Array.isArray(contactos) || contactos.length === 0) {
+    return res.status(400).json({
+      message: "Se requiere al menos un contacto.",
+    });
+  }
+
+  const nuevosContactos = await Promise.all(
+    contactos.map((contacto) =>
+      Contacto.create({ ...contacto, clienteId: destino.id })
+    )
+  );
   const destinoConContacto = await Destino.findByPk(destino.id, {
     include: {
       model: Contacto,
@@ -102,6 +97,29 @@ const createDestinoWithContacto = async (req, res) => {
 };
 
 controller.createDestinoWithContacto = createDestinoWithContacto;
+
+const addContactoToDestino = async (req, res) => {
+  try {
+    const idDestino = req.params.id;
+    const nuevoContacto = req.body;
+    const destino = await Destino.findByPk(idDestino);
+    await destino.createContacto(nuevoContacto);
+    const clienteActualizado = await Destino.findByPk(idDestino, {
+      include: {
+        model: Contacto,
+        as: "contactos",
+      },
+    });
+    return res.status(200).json(clienteActualizado);
+  } catch (error) {
+    console.error("Error en cargar contacto:", error);
+    return res.status(500).json({
+      message: "Error al cargar contacto",
+    });
+  }
+};
+
+controller.addContactoToDestino = addContactoToDestino;
 
 const updateDestino = async (req, res) => {
   const { pais, provincia, localidad, direccion } = req.body;
