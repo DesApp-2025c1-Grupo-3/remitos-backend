@@ -12,12 +12,15 @@ const contactoSchema = JOI.object().keys({
     "string.email": "Debe ser un correo electrónico válido",
     "string.empty": "El correo electrónico no puede estar vacío",
   }),
-  telefono: JOI.number().integer().positive().required().messages({
-    "any.required": "El teléfono es requerido",
-    "number.base": "El teléfono debe ser un número",
-    "number.integer": "El teléfono debe ser un número entero",
-    "number.positive": "El teléfono debe ser un número positivo",
-  }),
+  telefono: JOI.string()
+    .pattern(/^\+?\d{10,15}$/)
+    .required()
+    .messages({
+      "any.required": "El teléfono es requerido",
+      "number.base": "El teléfono debe ser un número",
+      "number.integer": "El teléfono debe ser un número entero",
+      "number.positive": "El teléfono debe ser un número positivo",
+    }),
 });
 module.exports = contactoSchema;
 //# sourceMappingURL=contactoSchema.js.map

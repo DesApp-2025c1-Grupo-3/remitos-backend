@@ -12,6 +12,7 @@ const getCliente = async (req, res) => {
     /*const cacheCliente = await cliente.get(cacheKey);
     if (cacheCliente) {
       return res.status(200).json(JSON.parse(cacheCliente));
+      BUSCAR SOLUCION A LA CACHÉ
     }*/
 
     const offset = (page - 1) * limit;

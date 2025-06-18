@@ -84,7 +84,7 @@ const createDestinoWithContacto = async (req, res) => {
 
   const nuevosContactos = await Promise.all(
     contactos.map((contacto) =>
-      Contacto.create({ ...contacto, clienteId: destino.id })
+      Contacto.create({ ...contacto, destinoId: destino.id })
     )
   );
   const destinoConContacto = await Destino.findByPk(destino.id, {
