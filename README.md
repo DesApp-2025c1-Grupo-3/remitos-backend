@@ -1,146 +1,321 @@
-# Repositorio semilla: API NodeJS :seedling:
+# Sistema de Remitos - Backend API 🚚
 
-> Este repositorio es un fork de [otro que está en la organización surprograma](https://github.com/surprograma/nodejs-api-seed).  
-> El original es uno de los repositorios que se usan en la serie de videos **Tu primera aplicación full stack: NodeJS + React**, [disponible en YouTube](https://www.youtube.com/playlist?list=PL7q-McYJyHlgVGQIRYVKl381twyJ4XM_h).  
-> Mirar estos videos es una muy buena forma de entender un poco más sobre las tecnologías que van a usarse. :smiley:
->
-> A continuación, transcribimos los comentarios del repo de surprograma.
-> En el medio, incluimos algunas aclaraciones que (creo) pueden venir bien en el contexto de la materia.
+API REST para el sistema de gestión de remitos desarrollada con Node.js, Express y PostgreSQL.
 
-¡Bienvenida/o! En este repositorio encontrarás una plantilla (de las infinitas posibles) para crear una API utilizando NodeJS. Las principales tecnologías que utilizamos son:
+## 🛠️ Tecnologías Utilizadas
 
-- [NodeJS](https://nodejs.org/es/): entorno de ejecución para JavaScript.
-- [ExpressJS](https://expressjs.com/): framework para crear aplicaciones web.
-- [Sequelize](https://sequelize.org/master/): ORM (object-relational mapping) para interactuar con una base SQL desde objetos JavaScript.
-- [PostgreSQL](https://www.postgresql.org/): base de datos SQL.
-- [Jest](https://jestjs.io/): framework para escribir tests.
+- **[Node.js 14+](https://nodejs.org/)**: Entorno de ejecución JavaScript
+- **[Express.js](https://expressjs.com/)**: Framework web para Node.js
+- **[Sequelize](https://sequelize.org/)**: ORM para PostgreSQL
+- **[PostgreSQL 12+](https://www.postgresql.org/)**: Base de datos relacional
+- **[Redis](https://redis.io/)**: Cache y sesiones
+- **[Docker](https://www.docker.com/)**: Contenedores para desarrollo
+- **[Jest](https://jestjs.io/)**: Framework de testing
 
-Para crear un proyecto siguiendo esta plantilla, lo único que tenés que hacer es clickear en el botón que dice `Use this template`. ¡Y no te olvides de cambiarle el nombre en el `package.json`!
+## 📋 Prerrequisitos
 
-## :point_up: Prerrequisitos - para instalar antes de empezar
+### Para Nuevos Desarrolladores
 
-Vas a necesitar un IDE o al menos un editor de texto que coloree la sintaxis. Recomendamos utilizar [Visual Studio Code](https://code.visualstudio.com/) - que se lleva muy bien con proyectos JavaScript - enriquecido con los siguientes plugins:
+Necesitas tener instalado:
 
-- [ESlint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+1. **Node.js 14+** (recomendamos usar [nvm](https://github.com/nvm-sh/nvm))
+2. **Docker y Docker Compose**
+3. **Git**
+
+### Editor Recomendado: Visual Studio Code
+
+Con las siguientes extensiones:
+
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer)
 - [Jest Test Explorer](https://marketplace.visualstudio.com/items?itemName=kavod-io.vscode-jest-test-adapter)
 
-Para ejecutar el código es necesario tener NodeJS en su versión 14 (`lts/fermium`). Para instalarlo recomendamos utilizar el manejador de versiones [`nvm`](https://github.com/nvm-sh/nvm), aunque también podés hacerlo manualmente siguiendo las instrucciones adecuadas para tu sistema operativo.
+## 🚀 Configuración Inicial (Nuevos Desarrolladores)
 
-> **Nota**  
-> `nvm` no está disponible para Windows. Yo que uso Windows, me instalé [nvm for Windows](https://github.com/coreybutler/nvm-windows) y me viene andando.
+### 1. Clonar el Repositorio
 
-Por último, se incluye un archivo de [Docker Compose](https://docs.docker.com/compose/) con todo lo necesario para instalar y configurar las bases de datos en PostgreSQL (una para desarrollo y otra para test). Si por algún motivo no querés usar Docker, vas a tener que instalar PostgreSQL y luego ejecutar el script `docker/init/crear-db.sh` en tu entorno.
+```bash
+git clone [URL_DEL_REPOSITORIO]
+cd remitos-backend
+```
 
-> **Nota**  
-> Si no manejan Docker, creo que les conviene arrancar sin "dockerizar".
-> Es cierto que tienen que instalarse PostgreSQL y crear las bases de desarrollo y test.  
-> Para eso se puede, o bien ejecutar el script que se indica arriba, o bien abrirlo y ejecutar las sentencias SQL que están ahí, desde alguna herramienta que les permita manejar bases de datos relacionales. Yo uso la versión community de DBeaver (https://dbeaver.io/) y no tengo quejas hasta ahora.
+### 2. Instalar Dependencias
 
-## :ballot_box_with_check: Configuración inicial del proyecto
+```bash
+npm install
+```
 
-Asumiendo que ya configuraste todos los prerrequisitos y que vas a utilizar Docker, estos son los comandos que deberías ejecutar la primera vez que trabajes en el proyecto:
+### 3. Configurar Variables de Entorno
 
-```shell
-# Instala, configura y levanta las bases de datos.
-# El flag -d (daemon) hace que la ejecución continue incluso luego de reiniciar la máquina.
-docker-compose up -d
-
-# Copia las variables de entorno necesarias para acceder a las bases de datos.
-# Son dos archivos distintos, uno para development y otro para los tests automaticos.
+```bash
+# Copiar archivos de configuración
 cp .env.example .env.development
 cp .env.example .env.test
-
-# Instala las dependencias Node del proyecto.
-npm install
-
-# Ejecuta las migraciones iniciales para las bases de dev y test.
-npm run db:init
-NODE_ENV=test npm run db:init
 ```
 
-De manera opcional, también podés cargar unos datos de prueba, llamados _seeders_, que vienen incluidos. A medida que el desarrollo continue, se podrían seguir agregando más datos que ayuden en las pruebas manuales. Para cargar los _seeders_, ejecutar el siguiente comando:
+### 4. Levantar Base de Datos con Docker
 
-```shell
-# (Opcional) Carga los datos de prueba en la base de desarrollo.
+```bash
+# Levantar PostgreSQL y Redis
+docker compose up -d
+
+# Verificar que los contenedores estén corriendo
+docker compose ps
+```
+
+### 5. Configurar Base de Datos
+
+```bash
+# Ejecutar migraciones
+npm run db:migrate
+
+# Cargar datos iniciales (estados del sistema)
 npm run db:seed
 ```
 
-> **Nota**  
-> Los seeders son un concepto ligado a Sequelize. Busquen a partir de "Creating the first Seed" en [esta página](https://sequelize.org/master/manual/migrations.html).
+### 6. Iniciar el Servidor
 
-## :file_folder: Estructura de directorios
-
-Breve descripción de qué se puede encontrar en cada uno de los directorios del proyecto:
-
-```shell
-.
-├── bin                 # Punto de entrada del servidor
-├── db
-│   ├── migrations      # Migraciones de la base de datos
-│   └── seeders         # Datos de prueba para la base de datos
-├── docker              # Configuración de Docker para desarrollo
-├── lib
-│   ├── config          # Configuración de la base de datos
-│   ├── controllers     # Acciones de nuestra aplicación
-│   ├── models          # Definición de modelos, atributos, etc
-│   └── routes          # Rutas de la API
-└── test                # Utilidades para escribir tests
-```
-
-## :woman_technologist: :man_technologist: Comandos útiles para el día a día
-
-A continuación, algunos comandos necesarios para el desarrollo diario en este proyecto.
-
-### Código
-
-```shell
-# Levanta el proyecto y recarga automáticamente si hay cambios.
+```bash
+# Modo desarrollo (recarga automática)
 npm start
 
-# Ejecuta los tests una sola vez.
-npm test
-
-# Ejecuta los tests y se queda esperando por cambios.
-npm test:watch
+# O modo producción
+npm run prod
 ```
 
-### Base de datos
+¡Listo! El servidor estará corriendo en `http://localhost:3000`
 
-Estos comandos se tienen que ejecutar en una consola ubicada en la carpeta raíz del proyecto.
+## 🔄 Para Desarrolladores Existentes (Limpiar y Reiniciar)
 
-```shell
-# Ejecuta las migraciones.
-npm run db:init
+Si ya tenías el proyecto y quieres empezar limpio:
 
-# Carga los datos de prueba.
+### Opción 1: Limpieza Completa (Recomendada)
+
+```bash
+# 1. Detener contenedores
+docker compose down
+
+# 2. Eliminar volúmenes de datos (Cuidado. Esto borra todo)
+sudo rm -rf docker/postgres/data/*
+sudo rm -rf docker/redis/data/*
+
+# 3. Levantar contenedores frescos
+docker compose up -d
+
+
+# 4. Ejecutar migraciones
+npm run db:migrate
+
+# 5. Cargar datos iniciales
 npm run db:seed
 
-# Crea una nueva migración llamada `add-descripcion-to-producto`.
-npx sequelize migration:generate --name add-descripcion-to-producto
+# 6. Iniciar servidor
+npm start
+```
 
-# Crea un nuevo seeder llamado `edificios`.
-npx sequelize seed:generate --name edificios
+### Opción 2: Solo Recrear Base de Datos
 
-# Deshace la última migración.
+```bash
+# 1. Conectarse a PostgreSQL y eliminar/recrear la base
+docker compose exec db psql -U postgres -c "DROP DATABASE IF EXISTS desApp;"
+docker compose exec db psql -U postgres -c "CREATE DATABASE desApp;"
+
+# 2. Ejecutar migraciones y seeders
+npm run db:migrate
+npm run db:seed
+
+# 3. Iniciar servidor
+npm start
+```
+
+## 📁 Estructura del Proyecto
+
+```
+remitos-backend/
+├── bin/                    # Punto de entrada del servidor
+├── config/                 # Configuración de la aplicación
+├── docker/                 # Configuración de Docker
+│   ├── postgres/           # Datos de PostgreSQL
+│   └── redis/              # Datos de Redis
+├── lib/                    # Código fuente principal
+│   ├── config/             # Configuración de Sequelize
+│   ├── controllers/        # Lógica de negocio
+│   ├── middlewares/        # Middlewares personalizados
+│   ├── migrations/         # Migraciones de base de datos
+│   ├── models/             # Modelos de Sequelize
+│   ├── routes/             # Definición de rutas API
+│   ├── schemas/            # Esquemas de validación
+│   └── uploads/            # Archivos subidos
+├── migrations/             # Migraciones adicionales
+├── seeders/                # Datos iniciales
+└── test/                   # Utilidades de testing
+```
+
+## 🗄️ Modelos de Datos
+
+El sistema maneja las siguientes entidades principales:
+
+- **Cliente**: Información de clientes
+- **Destino**: Direcciones de destino
+- **Contacto**: Contactos asociados a destinos
+- **Remito**: Documento principal del sistema
+- **Mercadería**: Información de la carga
+- **Estado**: Estados del remito (Autorizado, En preparación, etc.)
+
+## 🌐 Endpoints Principales
+
+### Remitos
+
+- `GET /remito?page=1&limit=20` - Listar remitos con paginación
+- `GET /remito/:id` - Obtener remito por ID
+- `POST /remitoFinal` - Crear remito completo (con cliente, destino y mercadería)
+- `PUT /remito/:id` - Actualizar datos básicos del remito
+- `PUT /remito/:id/mercaderia` - Actualizar mercadería del remito
+- `PUT /remito/:id/estado/:estadoId` - Cambiar estado del remito
+- `DELETE /remito/:id` - Eliminar remito (soft delete)
+
+### Clientes
+
+- `GET /cliente` - Listar clientes
+- `POST /cliente` - Crear cliente
+- `PUT /cliente/:id` - Actualizar cliente
+
+### Destinos
+
+- `GET /destino` - Listar destinos
+- `POST /destino` - Crear destino
+- `PUT /destino/:id` - Actualizar destino
+
+## 🧪 Testing
+
+```bash
+# Ejecutar todos los tests
+npm test
+
+# Ejecutar tests en modo watch
+npm run test:watch
+
+# Ejecutar tests con coverage
+npm test -- --coverage
+```
+
+## 📊 Base de Datos
+
+### Estados del Sistema
+
+El sistema incluye los siguientes estados predefinidos:
+
+1. **Autorizado** (id: 1) - Estado inicial
+2. **Retenido** (id: 2) - No se puede despachar
+3. **En preparación** (id: 3) - Armando envoltorio
+4. **En carga** (id: 4) - Asignado a viaje
+5. **En camino** (id: 5) - Viaje iniciado
+6. **No entregado** (id: 6) - Fallo en entrega
+7. **Entregado** (id: 7) - Entregado exitosamente
+
+### Comandos Útiles de Base de Datos
+
+```bash
+# Crear nueva migración
+npx sequelize-cli migration:generate --name nombre-migracion
+
+# Crear nuevo seeder
+npx sequelize-cli seed:generate --name nombre-seeder
+
+# Deshacer última migración
+npx sequelize db:migrate:undo
+
+# Ver estado de migraciones
+npx sequelize db:migrate:status
+```
+
+## 🐳 Docker
+
+### Servicios Incluidos
+
+- **PostgreSQL 12.5**: Puerto 5432
+- **Redis 7.0**: Puerto 6379
+
+### Comandos Docker Útiles
+
+```bash
+# Ver logs de PostgreSQL
+docker compose logs db
+
+# Ver logs de Redis
+docker compose logs redis
+
+# Conectarse a PostgreSQL
+docker compose exec db psql -U postgres -d desApp
+
+# Conectarse a Redis
+docker compose exec redis redis-cli
+
+# Reiniciar solo un servicio
+docker compose restart db
+```
+
+## 🔧 Scripts Disponibles
+
+```bash
+npm start          # Desarrollo con recarga automática
+npm run build      # Compilar código
+npm run server     # Ejecutar servidor compilado
+npm run dev        # Desarrollo
+npm run prod       # Producción
+npm run db:migrate # Ejecutar migraciones
+npm run db:seed    # Ejecutar seeders
+npm test           # Ejecutar tests
+npm run lint       # Verificar código con ESLint
+```
+
+## 🚨 Solución de Problemas Comunes
+
+### Error: "Database connection failed"
+
+```bash
+# Verificar que PostgreSQL esté corriendo
+docker compose ps
+
+# Si no está corriendo, levantarlo
+docker compose up -d db
+```
+
+### Error: "Port already in use"
+
+```bash
+# Ver qué proceso usa el puerto 3000
+lsof -i :3000
+
+# Matar el proceso si es necesario
+kill -9 [PID]
+```
+
+### Error: "Migration failed"
+
+```bash
+# Verificar estado de migraciones
+npx sequelize db:migrate:status
+
+# Deshacer última migración si es necesario
 npx sequelize db:migrate:undo
 ```
 
-## Acciones automáticas
+### Limpiar Cache de Node
 
-Este repositorio está configurado para hacer un formateo automático de código al grabar, y para formatear y pasar chequeos al commitear.
+```bash
+# Limpiar cache de npm
+npm cache clean --force
 
-Si algún grupo quisiera desactivar estas opciones, se hace así.
+# Reinstalar dependencias
+rm -rf node_modules package-lock.json
+npm install
+```
 
-### Formateo automático al grabar
+## 👥 Equipo de Desarrollo
 
-En el archivo `/vscode/settings.json` cambiar el valor de `editor.formatOnSave`.
+Para reportar bugs o solicitar features, crear un issue en el repositorio.
 
-### Acciones al commitear
+---
 
-Se configuran en el archivo `package.json`, en el atributo `husky`.
-Actualmente, este atributo hace referencia a otro atributo `lint-staged`.
-
-- Si se eliminan ambos elementos del `package.json`, no va a hacer ninguna acción previa a commitear.
-- Si se modifica `lint-staged`, se puede eliminar, o modificar la configuración, del chequeo (`eslint`) y/o el formateo (`prettier`) de código. Obviamente, para modificar las configuraciones, hay que mirar cómo en la documentación de [ESLint](https://eslint.org/) y/o [Prettier](https://prettier.io/).
+**¡Happy coding! 🚀**
