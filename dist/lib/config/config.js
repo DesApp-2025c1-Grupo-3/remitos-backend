@@ -12,7 +12,7 @@ function getEnvironment() {
 
 function initializeEnv() {
   dotenv.config({
-    path: path.resolve(process.cwd(), `.env.${getEnvironment()}`)
+    path: path.resolve(process.cwd(), `.env.${getEnvironment()}`),
   });
 }
 
@@ -25,10 +25,7 @@ function parseHerokuUrlIfPresent() {
 
   const config = parse(url); // Heroku necesita sí o sí SSL, y para eso hay que habilitar el driver nativo.
 
-  return { ...config,
-    username: config.user,
-    native: true
-  };
+  return { ...config, username: config.user, native: true };
 }
 
 function normalizePort(val) {
@@ -52,11 +49,11 @@ function initializeConfig() {
   let dbConfig = {
     username: process.env.SQL_USERNAME || "postgres",
     password: process.env.SQL_PASSWORD || "1234",
-    database: process.env.SQL_DATABASE || "desApp",
+    database: process.env.SQL_DATABASE || "desapp",
     host: process.env.SQL_HOST || "localhost",
     port: process.env.SQL_PORT || "5432",
     dialect: "postgres",
-    logging: false
+    logging: false,
   };
 
   if (process.env.SQL_DATABASE_SCHEMA) {
@@ -66,16 +63,15 @@ function initializeConfig() {
   if (environment === "development") {
     dbConfig.seederStorage = "sequelize";
   } else if (environment === "test") {
-    dbConfig.database = process.env.SQL_TEST_DATABASE || process.env.SQL_DATABASE;
+    dbConfig.database =
+      process.env.SQL_TEST_DATABASE || process.env.SQL_DATABASE;
   } else if (environment === "production") {
-    dbConfig = { ...dbConfig,
-      ...parseHerokuUrlIfPresent()
-    };
+    dbConfig = { ...dbConfig, ...parseHerokuUrlIfPresent() };
   }
 
   return {
     db: dbConfig,
-    port: normalizePort(process.env.PORT || "3001")
+    port: normalizePort(process.env.PORT || "3001"),
   };
 }
 
