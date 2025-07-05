@@ -6,12 +6,22 @@ module.exports = {
       "Estados",
       [
         {
-          nombre: "Ingresado",
+          nombre: "Autorizado",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          nombre: "En curso",
+          nombre: "En preparación",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          nombre: "En carga",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          nombre: "En camino",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -21,7 +31,12 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          nombre: "Cancelado",
+          nombre: "No entregado",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          nombre: "Retenido",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
