@@ -21,7 +21,7 @@ const config = require("./config/config.js");
  * Get port from environment and store in Express.
  */
 
-app.set("port", config.port || "3002");
+app.set("port", config.port);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(
