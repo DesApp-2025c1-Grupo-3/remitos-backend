@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "postgres",
-    "password": "1234",
-    "database": "desapp",
+    "password": "2299",
+    "database": "desApp",
     "host": "localhost",
     "dialect": "postgres",
     "port": 5432

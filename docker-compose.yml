@@ -5,7 +5,7 @@ services:
     image: postgres:12.5-alpine
     restart: always
     environment:
-      POSTGRES_PASSWORD: 1234
+      POSTGRES_PASSWORD: 2299
       ALLOW_IP_RANGE: 0.0.0.0/0
     ports:
       - "5432:5432"
@@ -28,8 +28,8 @@ services:
       - NODE_ENV=development
       - DB_HOST=db
       - DB_USER=postgres
-      - DB_PASS=1234
-      - DB_NAME=desapp
+      - DB_PASS=2299
+      - DB_NAME=desApp
     depends_on:
       db:
         condition: service_healthy

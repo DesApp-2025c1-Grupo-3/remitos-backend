@@ -1,4 +1,6 @@
-const { includes } = require("lodash");
+const {
+  includes
+} = require("lodash");
 
 const {
   Remito,
@@ -7,12 +9,17 @@ const {
   Contacto,
   Estado,
   Mercaderia,
-  sequelize,
+  TipoMercaderia,
+  sequelize
 } = require("../models");
 
-const { message } = require("../schemas/estadoSchema");
+const {
+  message
+} = require("../schemas/estadoSchema");
 
-const { Op } = require("sequelize");
+const {
+  Op
+} = require("sequelize");
 
 const controller = {};
 
@@ -26,7 +33,7 @@ const getRemitos = async (req, res) => {
 
     if (req.query.numeroAsignado) {
       where.numeroAsignado = {
-        [Op.iLike]: `%${req.query.numeroAsignado}%`,
+        [Op.iLike]: `%${req.query.numeroAsignado}%`
       };
     }
 
@@ -49,40 +56,46 @@ const getRemitos = async (req, res) => {
       const fechaFin = new Date(year, month - 1, day, 23, 59, 59, 999);
       where.fechaEmision = {
         [Op.gte]: fechaInicio,
-        [Op.lte]: fechaFin,
+        [Op.lte]: fechaFin
       };
     }
 
-    const { count, rows } = await Remito.findAndCountAll({
+    const {
+      count,
+      rows
+    } = await Remito.findAndCountAll({
       where,
       limit,
       offset,
-      include: [
-        {
-          model: Destino,
-          as: "destino",
-        },
-        {
-          model: Cliente,
-          as: "cliente",
-        },
-        {
-          model: Estado,
-          as: "estado",
-        },
-      ],
-      order: [["createdAt", "DESC"]],
+      include: [{
+        model: Destino,
+        as: "destino"
+      }, {
+        model: Cliente,
+        as: "cliente"
+      }, {
+        model: Estado,
+        as: "estado"
+      }, {
+        model: Mercaderia,
+        as: "mercaderia",
+        include: [{
+          model: TipoMercaderia,
+          as: "tipoMercaderia"
+        }]
+      }],
+      order: [["createdAt", "DESC"]]
     });
     res.status(200).json({
       data: rows,
       totalItems: count,
       totalPages: Math.ceil(count / limit),
-      currentPage: page,
+      currentPage: page
     });
   } catch (error) {
     console.error("Error al obtener remitos:", error);
     res.status(500).json({
-      message: "Error al obtener los remitos",
+      message: "Error al obtener los remitos"
     });
   }
 };
@@ -92,24 +105,23 @@ controller.getRemitos = getRemitos;
 const getRemitoById = async (req, res) => {
   const id = req.params.id;
   const remito = await Remito.findByPk(id, {
-    include: [
-      {
-        model: Destino,
-        as: "destino",
-      },
-      {
-        model: Cliente,
-        as: "cliente",
-      },
-      {
-        model: Estado,
-        as: "estado",
-      },
-      {
-        model: Mercaderia,
-        as: "mercaderia",
-      },
-    ],
+    include: [{
+      model: Destino,
+      as: "destino"
+    }, {
+      model: Cliente,
+      as: "cliente"
+    }, {
+      model: Estado,
+      as: "estado"
+    }, {
+      model: Mercaderia,
+      as: "mercaderia",
+      include: [{
+        model: TipoMercaderia,
+        as: "tipoMercaderia"
+      }]
+    }]
   });
   res.status(200).json(remito);
 };
@@ -119,7 +131,7 @@ controller.getRemitoById = getRemitoById;
 const createRemito = async (req, res) => {
   const {
     numeroAsignado,
-    tipoMercaderia,
+    tipoMercaderiaId,
     valorDeclarado,
     volumenMetrosCubico,
     pesoMercaderia,
@@ -128,26 +140,53 @@ const createRemito = async (req, res) => {
     cantidadBultos,
     cantidadPallets,
     requisitosEspeciales,
-    observaciones,
+    observaciones
   } = req.body;
   const fechaEmision = new Date();
   const archivoEnviado = req.file?.path || null;
-  const remito = await Remito.create({
-    numeroAsignado,
-    tipoMercaderia,
-    valorDeclarado,
-    volumenMetrosCubico,
-    pesoMercaderia,
-    fechaEmision,
-    cantidadBobinas,
-    cantidadRacks,
-    cantidadBultos,
-    cantidadPallets,
-    requisitosEspeciales,
-    observaciones,
-    archivoAdjunto: archivoEnviado,
-  });
-  res.status(201).json(remito);
+
+  try {
+    const tipoMercaderia = await TipoMercaderia.findByPk(tipoMercaderiaId);
+
+    if (!tipoMercaderia) {
+      return res.status(400).json({
+        message: "Tipo de mercadería no encontrado"
+      });
+    }
+
+    const nuevaMercaderia = await Mercaderia.create({
+      tipoMercaderiaId,
+      valorDeclarado,
+      volumenMetrosCubico,
+      pesoMercaderia,
+      cantidadBobinas,
+      cantidadRacks,
+      cantidadBultos,
+      cantidadPallets,
+      requisitosEspeciales
+    });
+    const remito = await Remito.create({
+      numeroAsignado,
+      fechaEmision,
+      observaciones,
+      prioridad: 1,
+      // Default priority
+      clienteId: 1,
+      // Default client (assuming client 1 exists)
+      destinoId: 1,
+      // Default destination (assuming destination 1 exists)
+      mercaderiaId: nuevaMercaderia.id,
+      estadoId: 1,
+      // Default state (assuming state 1 exists)
+      archivoAdjunto: archivoEnviado
+    });
+    res.status(201).json(remito);
+  } catch (error) {
+    console.error("Error al crear remito:", error);
+    res.status(500).json({
+      message: "Error al crear el remito"
+    });
+  }
 };
 
 controller.createRemito = createRemito;
@@ -163,7 +202,7 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
       clienteId,
       destinoId,
       prioridad,
-      tipoMercaderia,
+      tipoMercaderiaId,
       valorDeclarado,
       volumenMetrosCubico,
       pesoMercaderia,
@@ -171,60 +210,57 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
       cantidadRacks,
       cantidadBultos,
       cantidadPallets,
-      requisitosEspeciales,
-    } = req.body; // 1. Crear Mercaderia dentro de la transacción
+      requisitosEspeciales
+    } = req.body;
+    const tipoMercaderia = await TipoMercaderia.findByPk(tipoMercaderiaId);
 
-    const nuevaMercaderia = await Mercaderia.create(
-      {
-        tipoMercaderia,
-        valorDeclarado,
-        volumenMetrosCubico,
-        pesoMercaderia,
-        cantidadBobinas,
-        cantidadRacks,
-        cantidadBultos,
-        cantidadPallets,
-        requisitosEspeciales,
-      },
-      {
-        transaction: t,
-      }
-    ); // 2. Crear Remito dentro de la transacción
+    if (!tipoMercaderia) {
+      return res.status(400).json({
+        message: "Tipo de mercadería no encontrado"
+      });
+    } // 1. Crear Mercaderia dentro de la transacción
 
-    const nuevoRemito = await Remito.create(
-      {
-        numeroAsignado,
-        fechaEmision,
-        observaciones,
-        prioridad,
-        clienteId,
-        destinoId,
-        mercaderiaId: nuevaMercaderia.id,
-        estadoId: 1,
-        archivoAdjunto: req.file
-          ? `/uploads/remitos/${req.file.filename}`
-          : null,
-      },
-      {
-        transaction: t,
-      }
-    ); // Si todo va bien, confirmar la transacción
+
+    const nuevaMercaderia = await Mercaderia.create({
+      tipoMercaderiaId,
+      valorDeclarado,
+      volumenMetrosCubico,
+      pesoMercaderia,
+      cantidadBobinas,
+      cantidadRacks,
+      cantidadBultos,
+      cantidadPallets,
+      requisitosEspeciales
+    }, {
+      transaction: t
+    }); // 2. Crear Remito dentro de la transacción
+
+    const nuevoRemito = await Remito.create({
+      numeroAsignado,
+      fechaEmision,
+      observaciones,
+      prioridad,
+      clienteId,
+      destinoId,
+      mercaderiaId: nuevaMercaderia.id,
+      estadoId: 1,
+      archivoAdjunto: req.file ? `/uploads/remitos/${req.file.filename}` : null
+    }, {
+      transaction: t
+    }); // Si todo va bien, confirmar la transacción
 
     await t.commit(); // Devolver el remito completo con sus relaciones
 
     const remitoCompleto = await Remito.findByPk(nuevoRemito.id, {
-      include: ["cliente", "destino", "estado", "mercaderia"],
+      include: ["cliente", "destino", "estado", "mercaderia"]
     });
     res.status(201).json(remitoCompleto);
   } catch (error) {
     // Si algo falla, revertir la transacción
     await t.rollback();
-    console.error(
-      "Error al crear remito con mercaderia (transacción revertida):",
-      error
-    );
+    console.error("Error al crear remito con mercaderia (transacción revertida):", error);
     res.status(500).json({
-      message: "Error al crear el remito",
+      message: "Error al crear el remito"
     });
   }
 };
@@ -232,7 +268,9 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
 controller.createRemitoWithClienteAndDestino = createRemitoWithClienteAndDestino;
 
 const updateRemito = async (req, res) => {
-  const { id } = req.params;
+  const {
+    id
+  } = req.params;
   const data = req.body;
   console.log("--- Iniciando actualización de Remito ---");
   console.log("ID del Remito:", id);
@@ -244,35 +282,14 @@ const updateRemito = async (req, res) => {
     if (!remito) {
       console.log("Error: Remito no encontrado.");
       return res.status(404).json({
-        message: "Remito no encontrado",
+        message: "Remito no encontrado"
       });
     }
 
-    console.log(
-      "Remito encontrado. ID de mercadería asociada:",
-      remito.mercaderiaId
-    ); // Definir los campos que pertenecen a cada modelo
+    console.log("Remito encontrado. ID de mercadería asociada:", remito.mercaderiaId); // Definir los campos que pertenecen a cada modelo
 
-    const remitoFields = [
-      "numeroAsignado",
-      "fechaEmision",
-      "observaciones",
-      "prioridad",
-      "clienteId",
-      "destinoId",
-      "estadoId",
-    ];
-    const mercaderiaFields = [
-      "tipoMercaderia",
-      "valorDeclarado",
-      "volumenMetrosCubico",
-      "pesoMercaderia",
-      "cantidadBobinas",
-      "cantidadRacks",
-      "cantidadBultos",
-      "cantidadPallets",
-      "requisitosEspeciales",
-    ];
+    const remitoFields = ["numeroAsignado", "fechaEmision", "observaciones", "prioridad", "clienteId", "destinoId", "estadoId"];
+    const mercaderiaFields = ["tipoMercaderiaId", "valorDeclarado", "volumenMetrosCubico", "pesoMercaderia", "cantidadBobinas", "cantidadRacks", "cantidadBultos", "cantidadPallets", "requisitosEspeciales"];
     const remitoUpdateData = {};
     const mercaderiaUpdateData = {}; // Separar los datos del body para cada modelo
 
@@ -297,24 +314,22 @@ const updateRemito = async (req, res) => {
         await mercaderia.update(mercaderiaUpdateData);
         console.log("Mercadería actualizada exitosamente.");
       } else {
-        console.log(
-          "Error: Mercadería asociada no encontrada con ID:",
-          remito.mercaderiaId
-        );
+        console.log("Error: Mercadería asociada no encontrada con ID:", remito.mercaderiaId);
       }
     } else {
       console.log("Info: El remito no tiene ID de mercadería asociada.");
     } // Devolver el remito completo y actualizado con todas sus relaciones
 
+
     const remitoActualizado = await Remito.findByPk(id, {
-      include: ["cliente", "destino", "estado", "mercaderia"],
+      include: ["cliente", "destino", "estado", "mercaderia"]
     });
     console.log("--- Finalizando actualización de Remito ---");
     res.status(200).json(remitoActualizado);
   } catch (error) {
     console.error(`Error al actualizar remito con ID ${id}:`, error);
     res.status(500).json({
-      message: "Error al actualizar el remito",
+      message: "Error al actualizar el remito"
     });
   }
 };
@@ -326,23 +341,19 @@ const updateEstadoRemito = async (req, res) => {
   const estId = req.params.eid;
   const remito = await Remito.findByPk(remitoId);
   await remito.update({
-    estadoId: estId,
+    estadoId: estId
   });
   const remitoActualizado = await Remito.findByPk(remitoId, {
-    include: [
-      {
-        model: Cliente,
-        as: "cliente",
-      },
-      {
-        model: Destino,
-        as: "destino",
-      },
-      {
-        model: Estado,
-        as: "estado",
-      },
-    ],
+    include: [{
+      model: Cliente,
+      as: "cliente"
+    }, {
+      model: Destino,
+      as: "destino"
+    }, {
+      model: Estado,
+      as: "estado"
+    }]
   });
   res.status(200).json(remitoActualizado);
 };
@@ -354,16 +365,24 @@ const deleteRemito = async (req, res) => {
   const remito = await Remito.findByPk(id);
   await remito.destroy();
   res.status(200).json({
-    message: "Remito eliminado correctamente",
+    message: "Remito eliminado correctamente"
   });
 };
 
 controller.deleteRemito = deleteRemito; // Reporte: Volumen total de mercadería por cliente/período
 
 const getVolumenPorClientePeriodo = async (req, res) => {
-  const { clienteId, fechaDesde, fechaHasta } = req.query;
+  const {
+    clienteId,
+    fechaDesde,
+    fechaHasta
+  } = req.query;
 
-  const { Remito, Mercaderia, Cliente } = require("../models");
+  const {
+    Remito,
+    Mercaderia,
+    Cliente
+  } = require("../models");
 
   try {
     const where = {};
@@ -371,39 +390,34 @@ const getVolumenPorClientePeriodo = async (req, res) => {
 
     if (fechaDesde && fechaHasta) {
       where.fechaEmision = {
-        $between: [fechaDesde, fechaHasta],
+        $between: [fechaDesde, fechaHasta]
       };
     } else if (fechaDesde) {
       where.fechaEmision = {
-        $gte: fechaDesde,
+        $gte: fechaDesde
       };
     } else if (fechaHasta) {
       where.fechaEmision = {
-        $lte: fechaHasta,
+        $lte: fechaHasta
       };
     }
 
     const remitos = await Remito.findAll({
       where,
-      include: [
-        {
-          model: Mercaderia,
-          as: "mercaderia",
-        },
-        {
-          model: Cliente,
-          as: "cliente",
-        },
-      ],
+      include: [{
+        model: Mercaderia,
+        as: "mercaderia"
+      }, {
+        model: Cliente,
+        as: "cliente"
+      }]
     }); // Agrupar por cliente
 
     const resultado = {};
-    remitos.forEach((remito) => {
+    remitos.forEach(remito => {
       const cliente = remito.cliente;
       const razonSocial = cliente ? cliente.razonSocial : "Sin cliente";
-      const volumen = remito.mercaderia
-        ? remito.mercaderia.volumenMetrosCubico
-        : 0;
+      const volumen = remito.mercaderia ? remito.mercaderia.volumenMetrosCubico : 0;
 
       if (!resultado[razonSocial]) {
         resultado[razonSocial] = 0;
@@ -414,13 +428,13 @@ const getVolumenPorClientePeriodo = async (req, res) => {
 
     const data = Object.entries(resultado).map(([cliente, volumenTotal]) => ({
       cliente,
-      volumenTotal,
+      volumenTotal
     }));
     res.json(data);
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: "Error al obtener el reporte de volumen por cliente/período",
+      error: "Error al obtener el reporte de volumen por cliente/período"
     });
   }
 };

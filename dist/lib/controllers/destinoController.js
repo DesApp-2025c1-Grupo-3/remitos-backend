@@ -1,8 +1,15 @@
-const { where } = require("sequelize");
+const {
+  where
+} = require("sequelize");
 
-const { Destino, Contacto } = require("../models");
+const {
+  Destino,
+  Contacto
+} = require("../models");
 
-const { message } = require("../schemas/estadoSchema");
+const {
+  message
+} = require("../schemas/estadoSchema");
 
 const controller = {};
 
@@ -10,8 +17,8 @@ const getDestino = async (req, res) => {
   const destinos = await Destino.findAll({
     include: {
       model: Contacto,
-      as: "contactos",
-    },
+      as: "contactos"
+    }
   });
   res.status(200).json(destinos);
 };
@@ -23,8 +30,8 @@ const getDestinoById = async (req, res) => {
   const destino = await Destino.findByPk(id, {
     include: {
       model: Contacto,
-      as: "contactos",
-    },
+      as: "contactos"
+    }
   });
   res.status(200).json(destino);
 };
@@ -32,13 +39,17 @@ const getDestinoById = async (req, res) => {
 controller.getDestinoById = getDestinoById;
 
 const getDestinoFiltrado = async (req, res) => {
-  const { pais, provincia, localidad } = req.query;
+  const {
+    pais,
+    provincia,
+    localidad
+  } = req.query;
   const filtros = {};
   if (pais) filtros.pais = pais;
   if (provincia) filtros.provincia = provincia;
   if (localidad) filtros.localidad = localidad;
   const destinos = await Destino.findAll({
-    where: filtros,
+    where: filtros
   });
   res.status(200).json(destinos);
 };
@@ -54,24 +65,33 @@ const createDestino = async (req, res) => {
 controller.createDestino = createDestino;
 
 const createDestinoWithContacto = async (req, res) => {
-  const { nombre, pais, provincia, localidad, direccion, contactos } = req.body;
-  const destino = await Destino.create({
+  const {
     nombre,
     pais,
     provincia,
     localidad,
     direccion,
+    contactos
+  } = req.body;
+  const destino = await Destino.create({
+    nombre,
+    pais,
+    provincia,
+    localidad,
+    direccion
   });
 
   for (const contacto of contactos) {
-    await Contacto.create({ ...contacto, destinoId: destino.id });
+    await Contacto.create({ ...contacto,
+      destinoId: destino.id
+    });
   }
 
   const destinoConContacto = await Destino.findByPk(destino.id, {
     include: {
       model: Contacto,
-      as: "contactos",
-    },
+      as: "contactos"
+    }
   });
   res.status(200).json(destinoConContacto);
 };
@@ -79,7 +99,14 @@ const createDestinoWithContacto = async (req, res) => {
 controller.createDestinoWithContacto = createDestinoWithContacto;
 
 const updateDestino = async (req, res) => {
-  const { nombre, pais, provincia, localidad, direccion, contactos } = req.body;
+  const {
+    nombre,
+    pais,
+    provincia,
+    localidad,
+    direccion,
+    contactos
+  } = req.body;
   const idDestino = req.params.id;
   const destino = await Destino.findByPk(idDestino);
 
@@ -89,24 +116,26 @@ const updateDestino = async (req, res) => {
       pais,
       provincia,
       localidad,
-      direccion,
+      direccion
     });
     await Contacto.destroy({
       where: {
-        destinoId: idDestino,
-      },
+        destinoId: idDestino
+      }
     });
 
     for (const contacto of contactos) {
-      await Contacto.create({ ...contacto, destinoId: idDestino });
+      await Contacto.create({ ...contacto,
+        destinoId: idDestino
+      });
     }
   }
 
   const destinoActualizado = await Destino.findByPk(idDestino, {
     include: {
       model: Contacto,
-      as: "contactos",
-    },
+      as: "contactos"
+    }
   });
   res.status(200).json(destinoActualizado);
 };
@@ -117,16 +146,16 @@ const deleteDestino = async (req, res) => {
   const idDestino = req.params.id;
   await Contacto.destroy({
     where: {
-      destinoId: idDestino,
-    },
+      destinoId: idDestino
+    }
   });
   await Destino.destroy({
     where: {
-      id: idDestino,
-    },
+      id: idDestino
+    }
   });
   res.status(200).json({
-    message: "Destino eliminado correctamente",
+    message: "Destino eliminado correctamente"
   });
 };
 

@@ -1,5 +1,6 @@
 const rutasEstado = require("./estado.routes"); // <-- después vemos si hay que ajustar más adentro de routes
 
+
 const rutasContacto = require("./contacto.routes");
 
 const rutasCliente = require("./cliente.routes");
@@ -16,6 +17,6 @@ module.exports = {
   rutasContacto,
   rutasDestino,
   rutasRemito,
-  rutasMercaderia,
+  rutasMercaderia
 };
 //# sourceMappingURL=index.js.map
