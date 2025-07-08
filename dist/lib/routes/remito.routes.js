@@ -42,5 +42,9 @@ route.delete(
   remitoMiddleware.validateRemitoId,
   remitoController.deleteRemito
 );
+route.get(
+  "/reportes/volumen-por-cliente-periodo",
+  remitoController.getVolumenPorClientePeriodo
+);
 module.exports = route;
 //# sourceMappingURL=remito.routes.js.map

@@ -358,6 +358,73 @@ const deleteRemito = async (req, res) => {
   });
 };
 
-controller.deleteRemito = deleteRemito;
+controller.deleteRemito = deleteRemito; // Reporte: Volumen total de mercadería por cliente/período
+
+const getVolumenPorClientePeriodo = async (req, res) => {
+  const { clienteId, fechaDesde, fechaHasta } = req.query;
+
+  const { Remito, Mercaderia, Cliente } = require("../models");
+
+  try {
+    const where = {};
+    if (clienteId) where.clienteId = clienteId;
+
+    if (fechaDesde && fechaHasta) {
+      where.fechaEmision = {
+        $between: [fechaDesde, fechaHasta],
+      };
+    } else if (fechaDesde) {
+      where.fechaEmision = {
+        $gte: fechaDesde,
+      };
+    } else if (fechaHasta) {
+      where.fechaEmision = {
+        $lte: fechaHasta,
+      };
+    }
+
+    const remitos = await Remito.findAll({
+      where,
+      include: [
+        {
+          model: Mercaderia,
+          as: "mercaderia",
+        },
+        {
+          model: Cliente,
+          as: "cliente",
+        },
+      ],
+    }); // Agrupar por cliente
+
+    const resultado = {};
+    remitos.forEach((remito) => {
+      const cliente = remito.cliente;
+      const razonSocial = cliente ? cliente.razonSocial : "Sin cliente";
+      const volumen = remito.mercaderia
+        ? remito.mercaderia.volumenMetrosCubico
+        : 0;
+
+      if (!resultado[razonSocial]) {
+        resultado[razonSocial] = 0;
+      }
+
+      resultado[razonSocial] += volumen;
+    }); // Formatear para frontend
+
+    const data = Object.entries(resultado).map(([cliente, volumenTotal]) => ({
+      cliente,
+      volumenTotal,
+    }));
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Error al obtener el reporte de volumen por cliente/período",
+    });
+  }
+};
+
+controller.getVolumenPorClientePeriodo = getVolumenPorClientePeriodo;
 module.exports = controller;
 //# sourceMappingURL=remitoController.js.map
