@@ -10,6 +10,8 @@ const rutasRemito = require("./remito.routes");
 
 const rutasMercaderia = require("./mercaderia.routes");
 
+const rutasReportes = require("./reportes.routes");
+
 module.exports = {
   rutasEstado,
   rutasCliente,
@@ -17,5 +19,6 @@ module.exports = {
   rutasDestino,
   rutasRemito,
   rutasMercaderia,
+  rutasReportes,
 };
 //# sourceMappingURL=index.js.map

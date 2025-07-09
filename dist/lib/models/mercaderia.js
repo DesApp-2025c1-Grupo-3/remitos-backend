@@ -17,6 +17,20 @@ module.exports = (sequelize, DataTypes) => {
       tipoMercaderia: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          isIn: [
+            [
+              "Automotriz",
+              "Amoblamientos",
+              "Alimentos",
+              "Textil",
+              "Materiales Construcción",
+              "Electrónica",
+              "Químicos",
+              "Otros",
+            ],
+          ],
+        },
       },
       valorDeclarado: {
         type: DataTypes.INTEGER,

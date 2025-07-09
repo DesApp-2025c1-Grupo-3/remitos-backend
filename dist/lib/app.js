@@ -41,5 +41,6 @@ app.use(rutas.rutasEstado);
 app.use(rutas.rutasDestino);
 app.use(rutas.rutasRemito);
 app.use(rutas.rutasMercaderia);
+app.use("/api/reportes", rutas.rutasReportes);
 module.exports = app;
 //# sourceMappingURL=app.js.map
