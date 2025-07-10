@@ -171,7 +171,7 @@ controller.getDistribucionGeografica = async (req, res) => {
 }; // 3. Valor declarado por tipo de mercadería
 
 controller.getValorPorTipoMercaderia = async (req, res) => {
-  const { clienteId, fechaDesde, fechaHasta } = req.query;
+  const { clienteId, fechaDesde, fechaHasta, tipos } = req.query;
 
   try {
     const whereRemito = {};
@@ -189,6 +189,27 @@ controller.getValorPorTipoMercaderia = async (req, res) => {
       whereRemito.fechaEmision = {
         [Op.lte]: fechaHasta,
       };
+    } // Configurar filtro para mercadería si se especifican tipos
+
+    const whereMercaderia = {};
+    let tiposArray = []; // Manejar diferentes formatos del parámetro tipos
+
+    if (tipos) {
+      if (Array.isArray(tipos)) {
+        tiposArray = tipos;
+      } else if (typeof tipos === "string") {
+        // Si es un string, podría ser un solo valor o valores separados por coma
+        tiposArray = tipos.split(",").map((t) => t.trim());
+      } else if (typeof tipos === "object") {
+        // Si es un objeto (caso de Express con parámetros múltiples)
+        tiposArray = Object.values(tipos);
+      }
+    }
+
+    if (tiposArray.length > 0) {
+      whereMercaderia.tipoMercaderia = {
+        [Op.in]: tiposArray,
+      };
     }
 
     const remitos = await Remito.findAll({
@@ -197,6 +218,10 @@ controller.getValorPorTipoMercaderia = async (req, res) => {
         {
           model: Mercaderia,
           as: "mercaderia",
+          where:
+            Object.keys(whereMercaderia).length > 0
+              ? whereMercaderia
+              : undefined,
         },
       ],
     }); // Agrupar por tipo de mercadería
