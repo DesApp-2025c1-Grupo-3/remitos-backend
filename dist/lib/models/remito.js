@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       numeroAsignado: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       fechaEmision: {
         type: DataTypes.DATE,

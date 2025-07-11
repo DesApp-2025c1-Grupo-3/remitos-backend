@@ -24,16 +24,23 @@ route.post(
   "/remito",
   upload.single("archivoAdjunto"),
   schemaValidator(remitoSchema),
+  remitoMiddleware.validateNumeroAsignadoUnico,
   remitoController.createRemito
 ); //CREA EL REMITO CON DESTINO Y SU CONTACTO Y CLIENTE Y SU CONTACTO
 
 route.post(
   "/remitoFinal",
   upload.single("archivoAdjunto"), //schemaValidator(remitoSchema),
+  remitoMiddleware.validateNumeroAsignadoUnico,
   remitoController.createRemitoWithClienteAndDestino
 ); //Edita remito
 
-route.put("/remito/:id", remitoController.updateRemito); //Edita estado de un remito
+route.put(
+  "/remito/:id",
+  remitoMiddleware.validateRemitoId,
+  remitoMiddleware.validateNumeroAsignadoUnicoUpdate,
+  remitoController.updateRemito
+); //Edita estado de un remito
 
 route.put("/remito/:id/estado/:eid", remitoController.updateEstadoRemito); //Borra remito
 
