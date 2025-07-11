@@ -6,6 +6,7 @@ const remitoSchema = Joi.object().keys({
     "string.min": "Número asignado debe tener al menos 3 caracteres",
     "string.max": "Número asignado no puede tener más de 255 caracteres",
     "string.empty": "Número asignado no puede estar vacío",
+    "any.invalid": "El número asignado ya está en uso",
   }),
   tipoMercaderia: Joi.string()
     .valid(
@@ -99,9 +100,9 @@ const remitoSchema = Joi.object().keys({
     .valid("normal", "alta", "urgente")
     .required()
     .messages({
-      "any.require": "Prioridad es requerido",
+      "any.required": "Prioridad es requerido",
       "any.only": "Prioridad sólo acepta normal, alta o urgente",
-      "string.empty": "tipoEmpresa no puede estar vacío",
+      "string.empty": "Prioridad no puede estar vacío",
     }),
 });
 module.exports = remitoSchema;
