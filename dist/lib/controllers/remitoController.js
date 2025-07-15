@@ -34,6 +34,10 @@ const getRemitos = async (req, res) => {
       where.clienteId = req.query.clienteId;
     }
 
+    if (req.query.destinoId) {
+      where.destinoId = req.query.destinoId;
+    }
+
     if (req.query.estadoId) {
       where.estadoId = req.query.estadoId;
     }
@@ -129,6 +133,7 @@ const createRemito = async (req, res) => {
     cantidadPallets,
     requisitosEspeciales,
     observaciones,
+    razonNoEntrega,
   } = req.body;
   const fechaEmision = new Date();
   const archivoEnviado = req.file?.path || null;
@@ -146,6 +151,7 @@ const createRemito = async (req, res) => {
     requisitosEspeciales,
     observaciones,
     archivoAdjunto: archivoEnviado,
+    razonNoEntrega,
   });
   res.status(201).json(remito);
 };
@@ -172,24 +178,29 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
       cantidadBultos,
       cantidadPallets,
       requisitosEspeciales,
-    } = req.body; // 1. Crear Mercaderia dentro de la transacción
+    } = req.body; // Función para convertir valores a enteros para campos BIGINT
 
-    const nuevaMercaderia = await Mercaderia.create(
-      {
-        tipoMercaderia,
-        valorDeclarado,
-        volumenMetrosCubico,
-        pesoMercaderia,
-        cantidadBobinas,
-        cantidadRacks,
-        cantidadBultos,
-        cantidadPallets,
-        requisitosEspeciales,
-      },
-      {
-        transaction: t,
-      }
-    ); // 2. Crear Remito dentro de la transacción
+    const convertToInteger = (value) => {
+      if (value === null || value === undefined || value === "") return null;
+      const numValue = parseFloat(value);
+      return isNaN(numValue) ? null : Math.floor(numValue);
+    }; // Convertir valores numéricos a enteros
+
+    const mercaderiaData = {
+      tipoMercaderia,
+      valorDeclarado: convertToInteger(valorDeclarado),
+      volumenMetrosCubico: convertToInteger(volumenMetrosCubico),
+      pesoMercaderia: convertToInteger(pesoMercaderia),
+      cantidadBobinas: convertToInteger(cantidadBobinas),
+      cantidadRacks: convertToInteger(cantidadRacks),
+      cantidadBultos: convertToInteger(cantidadBultos),
+      cantidadPallets: convertToInteger(cantidadPallets),
+      requisitosEspeciales,
+    }; // 1. Crear Mercaderia dentro de la transacción
+
+    const nuevaMercaderia = await Mercaderia.create(mercaderiaData, {
+      transaction: t,
+    }); // 2. Crear Remito dentro de la transacción
 
     const nuevoRemito = await Remito.create(
       {
@@ -202,6 +213,7 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
         mercaderiaId: nuevaMercaderia.id,
         estadoId: 1,
         archivoAdjunto: req.file?.path || null,
+        razonNoEntrega: req.body.razonNoEntrega,
       },
       {
         transaction: t,
@@ -259,6 +271,7 @@ const updateRemito = async (req, res) => {
       "clienteId",
       "destinoId",
       "estadoId",
+      "razonNoEntrega",
     ];
     const mercaderiaFields = [
       "tipoMercaderia",
@@ -291,8 +304,35 @@ const updateRemito = async (req, res) => {
       const mercaderia = await Mercaderia.findByPk(remito.mercaderiaId);
 
       if (mercaderia) {
-        console.log("Datos para actualizar Mercaderia:", mercaderiaUpdateData);
-        await mercaderia.update(mercaderiaUpdateData);
+        // Función para convertir valores a enteros para campos BIGINT
+        const convertToInteger = (value) => {
+          if (value === null || value === undefined || value === "")
+            return null;
+          const numValue = parseFloat(value);
+          return isNaN(numValue) ? null : Math.floor(numValue);
+        }; // Convertir valores numéricos a enteros
+
+        const mercaderiaUpdateDataProcessed = {
+          ...mercaderiaUpdateData,
+          valorDeclarado: convertToInteger(mercaderiaUpdateData.valorDeclarado),
+          volumenMetrosCubico: convertToInteger(
+            mercaderiaUpdateData.volumenMetrosCubico
+          ),
+          pesoMercaderia: convertToInteger(mercaderiaUpdateData.pesoMercaderia),
+          cantidadBobinas: convertToInteger(
+            mercaderiaUpdateData.cantidadBobinas
+          ),
+          cantidadRacks: convertToInteger(mercaderiaUpdateData.cantidadRacks),
+          cantidadBultos: convertToInteger(mercaderiaUpdateData.cantidadBultos),
+          cantidadPallets: convertToInteger(
+            mercaderiaUpdateData.cantidadPallets
+          ),
+        };
+        console.log(
+          "Datos para actualizar Mercaderia:",
+          mercaderiaUpdateDataProcessed
+        );
+        await mercaderia.update(mercaderiaUpdateDataProcessed);
         console.log("Mercadería actualizada exitosamente.");
       } else {
         console.log(

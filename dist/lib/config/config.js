@@ -50,7 +50,7 @@ function initializeConfig() {
     username: process.env.DB_USER || process.env.SQL_USERNAME || "postgres",
     password: process.env.DB_PASS || process.env.SQL_PASSWORD || "1234",
     database: process.env.DB_NAME || process.env.SQL_DATABASE || "desapp",
-    host: process.env.DB_HOST || process.env.SQL_HOST || "172.21.154.86",
+    host: process.env.DB_HOST || process.env.SQL_HOST || "localhost",
     port: process.env.SQL_PORT || "5432",
     dialect: "postgres",
     logging: false,
