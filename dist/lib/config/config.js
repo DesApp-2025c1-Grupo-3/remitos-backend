@@ -47,10 +47,10 @@ function normalizePort(val) {
 function initializeConfig() {
   const environment = getEnvironment();
   let dbConfig = {
-    username: process.env.SQL_USERNAME || "postgres",
-    password: process.env.SQL_PASSWORD || "1234",
-    database: process.env.SQL_DATABASE || "desapp",
-    host: process.env.SQL_HOST || "localhost",
+    username: process.env.DB_USER || process.env.SQL_USERNAME || "postgres",
+    password: process.env.DB_PASS || process.env.SQL_PASSWORD || "1234",
+    database: process.env.DB_NAME || process.env.SQL_DATABASE || "desapp",
+    host: process.env.DB_HOST || process.env.SQL_HOST || "localhost",
     port: process.env.SQL_PORT || "5432",
     dialect: "postgres",
     logging: false,
