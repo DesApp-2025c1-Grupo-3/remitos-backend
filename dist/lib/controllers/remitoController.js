@@ -201,9 +201,7 @@ const createRemitoWithClienteAndDestino = async (req, res) => {
         destinoId,
         mercaderiaId: nuevaMercaderia.id,
         estadoId: 1,
-        archivoAdjunto: req.file
-          ? `/uploads/remitos/${req.file.filename}`
-          : null,
+        archivoAdjunto: req.file?.path || null,
       },
       {
         transaction: t,

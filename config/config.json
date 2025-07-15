@@ -3,7 +3,7 @@
     "username": "postgres",
     "password": "1234",
     "database": "desapp",
-    "host": "localhost",
+    "host": "172.21.154.86",
     "dialect": "postgres",
     "port": 5432
   },

@@ -12,24 +12,13 @@ services:
     volumes:
       - ./docker/postgres/data:/var/lib/postgresql/data
       - ./docker/postgres/init:/docker-entrypoint-initdb.d/
+      - db_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-  app:
-    build: .
-    command: sh -c "npx sequelize-cli db:migrate && npm start"
-    volumes:
-      - .:/usr/src/app
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - DB_HOST=db
-      - DB_USER=postgres
-      - DB_PASS=1234
-      - DB_NAME=desapp
-    depends_on:
-      db:
-        condition: service_healthy
+
+volumes:
+  db_data:
+
