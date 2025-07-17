@@ -4,10 +4,10 @@
   "license": "MIT",
   "main": "dist/bin/www.js",
   "scripts": {
-    "start": "nodemon",
+    "start": "node ./bin/www",
     "build": "run-s clean transpile",
     "server": "node ./dist/bin/www",
-    "dev": "cross-env NODE_ENV=development run-s build server",
+    "dev": "nodemon ./bin/www",
     "prod": "cross-env NODE_ENV=production run-s build server",
     "clean": "rimraf dist",
     "db:init": "run-s transpile db:migrate",
@@ -19,9 +19,17 @@
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --fix ./lib",
     "lint:prettier": "prettier --write ./lib",
-    "test": "jest --runInBand",
-    "test:watch": "jest --runInBand --watch",
-    "heroku-postbuild": "run-s build db:migrate"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "heroku-postbuild": "run-s build db:migrate",
+    "clean-db": "node scripts/clean-database.js",
+    "setup-demo": "node scripts/setup-demo.js",
+    "seed:estados": "npx sequelize-cli db:seed --seed 20250704000000-initial-estados.js",
+    "seed:clientes": "npx sequelize-cli db:seed --seed 20250101000001-demo-clientes.js",
+    "seed:destinos": "npx sequelize-cli db:seed --seed 20250101000002-demo-destinos.js",
+    "seed:contactos": "npx sequelize-cli db:seed --seed 20250101000003-demo-contactos.js",
+    "seed:remitos": "npx sequelize-cli db:seed --seed 20250101000004-demo-mercaderias-remitos.js",
+    "seed:all": "npm run seed:estados && npm run seed:clientes && npm run seed:destinos && npm run seed:contactos && npm run seed:remitos"
   },
   "nodemonConfig": {
     "exec": "npm run dev",
