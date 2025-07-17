@@ -20,6 +20,10 @@ module.exports = {
       tipoEmpresa: {
         type: Sequelize.STRING,
       },
+      activo: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
