@@ -1,0 +1,31 @@
+# Usar Node.js 18 Alpine para una imagen más liviana
+FROM node:18-alpine
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Instalar dependencias del sistema necesarias
+RUN apk add --no-cache python3 make g++ netcat-openbsd
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+
+# Instalar dependencias (incluyendo devDependencies para sequelize-cli)
+RUN npm ci
+
+# Copiar código fuente
+COPY . .
+
+# Crear directorio para uploads si no existe
+RUN mkdir -p uploads
+
+# Copiar script de entrada
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Exponer puerto
+EXPOSE 3002
+
+# Usar entrypoint
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["npm", "start"]

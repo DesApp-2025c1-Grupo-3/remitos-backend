@@ -3,22 +3,24 @@
     "username": "postgres",
     "password": "1234",
     "database": "desapp",
-    "host": "localhost",
+    "host": "db",
     "dialect": "postgres",
     "port": 5432
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "postgres",
+    "password": "1234",
+    "database": "testdb",
+    "host": "db",
+    "dialect": "postgres",
+    "port": 5432
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "postgres",
+    "password": "1234",
+    "database": "desapp",
+    "host": "db",
+    "dialect": "postgres",
+    "port": 5432
   }
 }

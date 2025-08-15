@@ -8,7 +8,14 @@
     "dev": "nodemon ./bin/www",
     "db:migrate": "sequelize db:migrate",
     "db:seed": "sequelize db:seed:all",
-    "demo": "node clean-and-seed.js"
+    "demo": "node clean-and-seed.js",
+    "docker:dev": "docker compose up --build",
+    "docker:dev:seeds": "RUN_SEEDS=true docker compose up --build",
+    "docker:prod": "DOCKERFILE=Dockerfile NODE_ENV=production VOLUME_MOUNT= docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:clean": "docker compose down -v && docker system prune -f",
+    "render:deploy": "echo 'Para desplegar en Render, usa el Dockerfile.render o configura render.yaml'"
   },
   "nodemonConfig": {
     "watch": [
