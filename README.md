@@ -1,146 +1,105 @@
-# Repositorio semilla: API NodeJS :seedling:
+# Sistema de Remitos - Backend
 
-> Este repositorio es un fork de [otro que está en la organización surprograma](https://github.com/surprograma/nodejs-api-seed).  
-> El original es uno de los repositorios que se usan en la serie de videos **Tu primera aplicación full stack: NodeJS + React**, [disponible en YouTube](https://www.youtube.com/playlist?list=PL7q-McYJyHlgVGQIRYVKl381twyJ4XM_h).  
-> Mirar estos videos es una muy buena forma de entender un poco más sobre las tecnologías que van a usarse. :smiley:
->
-> A continuación, transcribimos los comentarios del repo de surprograma.
-> En el medio, incluimos algunas aclaraciones que (creo) pueden venir bien en el contexto de la materia.
+API REST para el sistema de gestión de remitos desarrollada con Node.js, Express y PostgreSQL.
 
-¡Bienvenida/o! En este repositorio encontrarás una plantilla (de las infinitas posibles) para crear una API utilizando NodeJS. Las principales tecnologías que utilizamos son:
+## 🚀 Inicio Rápido con Docker
 
-- [NodeJS](https://nodejs.org/es/): entorno de ejecución para JavaScript.
-- [ExpressJS](https://expressjs.com/): framework para crear aplicaciones web.
-- [Sequelize](https://sequelize.org/master/): ORM (object-relational mapping) para interactuar con una base SQL desde objetos JavaScript.
-- [PostgreSQL](https://www.postgresql.org/): base de datos SQL.
-- [Jest](https://jestjs.io/): framework para escribir tests.
+### Prerrequisitos
+- [Docker](https://docs.docker.com/get-docker/) y [Docker Compose](https://docs.docker.com/compose/install/)
+- [Node.js](https://nodejs.org/) (versión 14 o superior)
 
-Para crear un proyecto siguiendo esta plantilla, lo único que tenés que hacer es clickear en el botón que dice `Use this template`. ¡Y no te olvides de cambiarle el nombre en el `package.json`!
+### Configuración Inicial
 
-## :point_up: Prerrequisitos - para instalar antes de empezar
-
-Vas a necesitar un IDE o al menos un editor de texto que coloree la sintaxis. Recomendamos utilizar [Visual Studio Code](https://code.visualstudio.com/) - que se lleva muy bien con proyectos JavaScript - enriquecido con los siguientes plugins:
-
-- [ESlint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer)
-- [Jest Test Explorer](https://marketplace.visualstudio.com/items?itemName=kavod-io.vscode-jest-test-adapter)
-
-Para ejecutar el código es necesario tener NodeJS en su versión 14 (`lts/fermium`). Para instalarlo recomendamos utilizar el manejador de versiones [`nvm`](https://github.com/nvm-sh/nvm), aunque también podés hacerlo manualmente siguiendo las instrucciones adecuadas para tu sistema operativo.
-
-> **Nota**  
-> `nvm` no está disponible para Windows. Yo que uso Windows, me instalé [nvm for Windows](https://github.com/coreybutler/nvm-windows) y me viene andando.
-
-Por último, se incluye un archivo de [Docker Compose](https://docs.docker.com/compose/) con todo lo necesario para instalar y configurar las bases de datos en PostgreSQL (una para desarrollo y otra para test). Si por algún motivo no querés usar Docker, vas a tener que instalar PostgreSQL y luego ejecutar el script `docker/init/crear-db.sh` en tu entorno.
-
-> **Nota**  
-> Si no manejan Docker, creo que les conviene arrancar sin "dockerizar".
-> Es cierto que tienen que instalarse PostgreSQL y crear las bases de desarrollo y test.  
-> Para eso se puede, o bien ejecutar el script que se indica arriba, o bien abrirlo y ejecutar las sentencias SQL que están ahí, desde alguna herramienta que les permita manejar bases de datos relacionales. Yo uso la versión community de DBeaver (https://dbeaver.io/) y no tengo quejas hasta ahora.
-
-## :ballot_box_with_check: Configuración inicial del proyecto
-
-Asumiendo que ya configuraste todos los prerrequisitos y que vas a utilizar Docker, estos son los comandos que deberías ejecutar la primera vez que trabajes en el proyecto:
-
-```shell
-# Instala, configura y levanta las bases de datos.
-# El flag -d (daemon) hace que la ejecución continue incluso luego de reiniciar la máquina.
-docker-compose up -d
-
-# Copia las variables de entorno necesarias para acceder a las bases de datos.
-# Son dos archivos distintos, uno para development y otro para los tests automaticos.
-cp .env.example .env.development
-cp .env.example .env.test
-
-# Instala las dependencias Node del proyecto.
-npm install
-
-# Ejecuta las migraciones iniciales para las bases de dev y test.
-npm run db:init
-NODE_ENV=test npm run db:init
+1. **Clonar el repositorio y navegar al directorio del backend:**
+```bash
+cd remitos-backend
 ```
 
-De manera opcional, también podés cargar unos datos de prueba, llamados _seeders_, que vienen incluidos. A medida que el desarrollo continue, se podrían seguir agregando más datos que ayuden en las pruebas manuales. Para cargar los _seeders_, ejecutar el siguiente comando:
-
-```shell
-# (Opcional) Carga los datos de prueba en la base de desarrollo.
-npm run db:seed
+2. **Configurar variables de entorno:**
+```bash
+cp .env.example .env
 ```
 
-> **Nota**  
-> Los seeders son un concepto ligado a Sequelize. Busquen a partir de "Creating the first Seed" en [esta página](https://sequelize.org/master/manual/migrations.html).
-
-## :file_folder: Estructura de directorios
-
-Breve descripción de qué se puede encontrar en cada uno de los directorios del proyecto:
-
-```shell
-.
-├── bin                 # Punto de entrada del servidor
-├── db
-│   ├── migrations      # Migraciones de la base de datos
-│   └── seeders         # Datos de prueba para la base de datos
-├── docker              # Configuración de Docker para desarrollo
-├── lib
-│   ├── config          # Configuración de la base de datos
-│   ├── controllers     # Acciones de nuestra aplicación
-│   ├── models          # Definición de modelos, atributos, etc
-│   └── routes          # Rutas de la API
-└── test                # Utilidades para escribir tests
+3. **Levantar la aplicación con Docker:**
+```bash
+# Desarrollo básico
+npm run docker:dev
 ```
 
-## :woman_technologist: :man_technologist: Comandos útiles para el día a día
-
-A continuación, algunos comandos necesarios para el desarrollo diario en este proyecto.
-
-### Código
-
-```shell
-# Levanta el proyecto y recarga automáticamente si hay cambios.
-npm start
-
-# Ejecuta los tests una sola vez.
-npm test
-
-# Ejecuta los tests y se queda esperando por cambios.
-npm test:watch
+4. **Ejecutar migraciones de base de datos:**
+```bash
+npm run db:migrate
 ```
 
-### Base de datos
-
-Estos comandos se tienen que ejecutar en una consola ubicada en la carpeta raíz del proyecto.
-
-```shell
-# Ejecuta las migraciones.
-npm run db:init
-
-# Carga los datos de prueba.
-npm run db:seed
-
-# Crea una nueva migración llamada `add-descripcion-to-producto`.
-npx sequelize migration:generate --name add-descripcion-to-producto
-
-# Crea un nuevo seeder llamado `edificios`.
-npx sequelize seed:generate --name edificios
-
-# Deshace la última migración.
-npx sequelize db:migrate:undo
+5. **Cargar estados del sistema (requerido):**
+```bash
+npm run db:seed:estados
 ```
 
-## Acciones automáticas
+### Comandos Principales
+```bash
+# Levantar aplicación en modo desarrollo
+npm run docker:dev
 
-Este repositorio está configurado para hacer un formateo automático de código al grabar, y para formatear y pasar chequeos al commitear.
 
-Si algún grupo quisiera desactivar estas opciones, se hace así.
+## 📁 Estructura del Proyecto
 
-### Formateo automático al grabar
+```
+remitos-backend/
+├── bin/                    # Punto de entrada del servidor
+├── config/                 # Configuración de base de datos
+├── lib/                    # Lógica de la aplicación
+│   ├── controllers/        # Controladores de la API
+│   ├── models/            # Modelos de Sequelize
+│   └── routes/            # Definición de rutas
+├── migrations/            # Migraciones de base de datos
+├── seeders/               # Datos de prueba
+│   └── 20250101000000-initial-estados.js  # Estados del sistema
+├── docker-compose.yml     # Configuración de Docker
+└── package.json           # Dependencias y scripts
+```
 
-En el archivo `/vscode/settings.json` cambiar el valor de `editor.formatOnSave`.
+## 🗄️ Base de Datos
 
-### Acciones al commitear
+### Estados del Sistema
+El sistema requiere que se carguen los estados básicos para funcionar correctamente:
+- Autorizado
+- En preparación
+- En carga
+- En camino
+- Entregado
+- No entregado
+- Retenido
 
-Se configuran en el archivo `package.json`, en el atributo `husky`.
-Actualmente, este atributo hace referencia a otro atributo `lint-staged`.
+**Importante:** Siempre ejecutar `npm run db:seed:estados` después de las migraciones.
 
-- Si se eliminan ambos elementos del `package.json`, no va a hacer ninguna acción previa a commitear.
-- Si se modifica `lint-staged`, se puede eliminar, o modificar la configuración, del chequeo (`eslint`) y/o el formateo (`prettier`) de código. Obviamente, para modificar las configuraciones, hay que mirar cómo en la documentación de [ESLint](https://eslint.org/) y/o [Prettier](https://prettier.io/).
+### Otros Seeds (Opcionales)
+Los siguientes seeds contienen datos de demostración y son opcionales:
+- `demo-clientes.js` - Clientes de ejemplo
+- `demo-destinos.js` - Destinos de ejemplo
+- `demo-contactos.js` - Contactos de ejemplo
+- `demo-mercaderias-remitos.js` - Remitos y mercaderías de ejemplo
+```
+
+### Logs y Debugging
+```bash
+# Ver logs de Docker
+npm run docker:logs
+
+# Ejecutar en modo desarrollo local
+npm run dev
+```
+
+## 🚀 Despliegue
+
+### Render
+El proyecto incluye configuración para despliegue en Render:
+```bash
+npm run render:deploy
+```
+
+## 📝 Notas
+
+- La aplicación corre en `http://localhost:3000` por defecto
+- PostgreSQL corre en `localhost:5432`
+- Siempre ejecutar `db:seed:estados` después de migraciones para cargar los estados requeridos
