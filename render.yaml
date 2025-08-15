@@ -37,5 +37,5 @@ services:
 databases:
   - name: remitos-db
     databaseName: desapp
-    user: postgres
+    user: remitos_user
     plan: free
