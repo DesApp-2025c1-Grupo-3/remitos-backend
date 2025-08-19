@@ -36,31 +36,6 @@ npm run db:migrate
 npm run db:seed:estados
 ```
 
-### Comandos Principales
-```bash
-# Levantar aplicación en modo desarrollo
-npm run docker:dev
-
-
-## 📁 Estructura del Proyecto
-
-```
-remitos-backend/
-├── bin/                    # Punto de entrada del servidor
-├── config/                 # Configuración de base de datos
-├── lib/                    # Lógica de la aplicación
-│   ├── controllers/        # Controladores de la API
-│   ├── models/            # Modelos de Sequelize
-│   └── routes/            # Definición de rutas
-├── migrations/            # Migraciones de base de datos
-├── seeders/               # Datos de prueba
-│   └── 20250101000000-initial-estados.js  # Estados del sistema
-├── docker-compose.yml     # Configuración de Docker
-└── package.json           # Dependencias y scripts
-```
-
-## 🗄️ Base de Datos
-
 ### Estados del Sistema
 El sistema requiere que se carguen los estados básicos para funcionar correctamente:
 - Autorizado
@@ -79,7 +54,7 @@ Los siguientes seeds contienen datos de demostración y son opcionales:
 - `demo-destinos.js` - Destinos de ejemplo
 - `demo-contactos.js` - Contactos de ejemplo
 - `demo-mercaderias-remitos.js` - Remitos y mercaderías de ejemplo
-```
+
 
 ### Logs y Debugging
 ```bash
@@ -103,3 +78,4 @@ npm run render:deploy
 - La aplicación corre en `http://localhost:3000` por defecto
 - PostgreSQL corre en `localhost:5432`
 - Siempre ejecutar `db:seed:estados` después de migraciones para cargar los estados requeridos
+- Tener cuidado con los demas seeds ya que no estan actualizados y pueden generar problemas
