@@ -4,13 +4,13 @@ services:
   app:
     build:
       context: .
-      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
+      dockerfile: Dockerfile.dev
     container_name: remitos-app
     restart: unless-stopped
     ports:
-      - "${PORT:-3002}:3002"
+      - "3002:3002"
     environment:
-      - NODE_ENV=${NODE_ENV:-development}
+      - NODE_ENV=development
       - PORT=3002
       - SQL_USERNAME=postgres
       - SQL_PASSWORD=1234
@@ -18,11 +18,11 @@ services:
       - SQL_HOST=db
       - SQL_PORT=5432
       - SQL_TEST_DATABASE=testdb
-      - RUN_SEEDS=${RUN_SEEDS:-false}
+      - RUN_MIGRATIONS=${RUN_MIGRATIONS:-false}
     volumes:
       - ./uploads:/app/uploads
-      - ${VOLUME_MOUNT:-./lib:/app/lib}
-      - ${VOLUME_MOUNT:-./bin:/app/bin}
+      - ./lib:/app/lib
+      - ./bin:/app/bin
     depends_on:
       db:
         condition: service_healthy
@@ -58,4 +58,3 @@ volumes:
 networks:
   remitos-network:
     driver: bridge
-

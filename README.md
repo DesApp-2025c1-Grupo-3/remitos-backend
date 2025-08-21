@@ -20,19 +20,14 @@ cd remitos-backend
 cp .env.example .env
 ```
 
-3. **Levantar la aplicación con Docker:**
+3. **Primera vez - Construir y levantar:**
 ```bash
-# Desarrollo básico
-npm run docker:dev
+# Construir imagen y levantar aplicación
+npm run docker:build
 ```
-
-4. **Ejecutar migraciones de base de datos:**
+4. **Ejecutar seeds de estados:**
 ```bash
-npm run db:migrate
-```
-
-5. **Cargar estados del sistema (requerido):**
-```bash
+# Construir imagen y levantar aplicación
 npm run db:seed:estados
 ```
 
@@ -56,26 +51,17 @@ Los siguientes seeds contienen datos de demostración y son opcionales:
 - `demo-mercaderias-remitos.js` - Remitos y mercaderías de ejemplo
 
 
+## 🔧 Desarrollo
+
 ### Logs y Debugging
 ```bash
 # Ver logs de Docker
 npm run docker:logs
-
-# Ejecutar en modo desarrollo local
-npm run dev
-```
-
-## 🚀 Despliegue
-
-### Render
-El proyecto incluye configuración para despliegue en Render:
-```bash
-npm run render:deploy
 ```
 
 ## 📝 Notas
 
-- La aplicación corre en `http://localhost:3000` por defecto
+- La aplicación corre en `http://localhost:3002` por defecto
 - PostgreSQL corre en `localhost:5432`
 - Siempre ejecutar `db:seed:estados` después de migraciones para cargar los estados requeridos
 - Tener cuidado con los demas seeds ya que no estan actualizados y pueden generar problemas
