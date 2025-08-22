@@ -1,4 +1,4 @@
-# Usar Node.js 18 Alpine para una imagen más liviana
+# Dockerfile específico para Windows
 FROM node:18-alpine
 
 # Establecer directorio de trabajo
@@ -10,17 +10,17 @@ RUN apk add --no-cache python3 make g++ netcat-openbsd dos2unix
 # Copiar archivos de dependencias
 COPY package*.json ./
 
-# Instalar dependencias (incluyendo devDependencies para sequelize-cli)
+# Instalar todas las dependencias
 RUN npm ci
 
 # Copiar código fuente
 COPY . .
 
-# Crear directorio para uploads si no existe
+# Crear directorio para uploads
 RUN mkdir -p uploads
 
-# Copiar script de entrada y corregir terminaciones de línea
-COPY docker-entrypoint.sh /usr/local/bin/
+# Copiar y configurar script de entrada
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN dos2unix /usr/local/bin/docker-entrypoint.sh && \
     chmod +x /usr/local/bin/docker-entrypoint.sh
 
@@ -29,4 +29,4 @@ EXPOSE 3002
 
 # Usar entrypoint
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

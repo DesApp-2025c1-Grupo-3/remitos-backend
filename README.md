@@ -31,25 +31,28 @@ npm run docker:build
 npm run db:seed:estados
 ```
 
-### Estados del Sistema
-El sistema requiere que se carguen los estados básicos para funcionar correctamente:
-- Autorizado
-- En preparación
-- En carga
-- En camino
-- Entregado
-- No entregado
-- Retenido
+### IMPORTANTE
 
-**Importante:** Siempre ejecutar `npm run db:seed:estados` después de las migraciones.
+#### 🏗️ Primera vez que se levanta la app o con cambios en código
+```bash
+# Construir imagen y levantar aplicación
+npm run docker:build
+```
 
-### Otros Seeds (Opcionales)
-Los siguientes seeds contienen datos de demostración y son opcionales:
-- `demo-clientes.js` - Clientes de ejemplo
-- `demo-destinos.js` - Destinos de ejemplo
-- `demo-contactos.js` - Contactos de ejemplo
-- `demo-mercaderias-remitos.js` - Remitos y mercaderías de ejemplo
+#### ⚡ Ejecuciones posteriores (más rápido)
+```bash
+# Solo levantar contenedores existentes
+npm run docker:dev
+```
 
+#### 📊 Base de datos
+```bash
+# Ejecutar migraciones manualmente (puede fallar debido a la config de dev, de todos modos se ejecuta automaticamente en el docker build)
+npm run db:migrate
+
+# Cargar estados del sistema (requerido)
+npm run db:seed:estados
+```
 
 ## 🔧 Desarrollo
 
@@ -63,5 +66,6 @@ npm run docker:logs
 
 - La aplicación corre en `http://localhost:3002` por defecto
 - PostgreSQL corre en `localhost:5432`
-- Siempre ejecutar `db:seed:estados` después de migraciones para cargar los estados requeridos
-- Tener cuidado con los demas seeds ya que no estan actualizados y pueden generar problemas
+- **Primera vez**: Usar `npm run docker:build`
+- **Ejecuciones posteriores**: Usar `npm run docker:dev` para mayor velocidad
+- Los estados del sistema se cargan manualmente con `npm run db:seed:estados`

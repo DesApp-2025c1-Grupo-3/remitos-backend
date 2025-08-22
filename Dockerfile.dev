@@ -5,7 +5,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Instalar dependencias del sistema necesarias
-RUN apk add --no-cache python3 make g++ netcat-openbsd
+RUN apk add --no-cache python3 make g++ netcat-openbsd dos2unix
 
 # Copiar archivos de dependencias
 COPY package*.json ./
@@ -19,9 +19,10 @@ COPY . .
 # Crear directorio para uploads si no existe
 RUN mkdir -p uploads
 
-# Copiar script de entrada
+# Copiar script de entrada y corregir terminaciones de línea
 COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN dos2unix /usr/local/bin/docker-entrypoint.sh && \
+    chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Exponer puerto
 EXPOSE 3002

@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 # Función para esperar la base de datos
 wait_for_db() {
@@ -17,6 +18,12 @@ run_migrations() {
     echo "ℹ️  Migraciones omitidas (RUN_MIGRATIONS no está habilitado)"
   fi
 }
+
+# Verificar que el script se puede ejecutar
+if [ ! -x "$0" ]; then
+  echo "❌ Error: El script no tiene permisos de ejecución"
+  exit 1
+fi
 
 # Ejecutar funciones
 wait_for_db

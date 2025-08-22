@@ -1,0 +1,62 @@
+# Docker Compose específico para Windows
+# Usar: docker-compose -f docker-compose.windows.yml up --build
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.windows
+    container_name: remitos-app
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - SQL_USERNAME=postgres
+      - SQL_PASSWORD=1234
+      - SQL_DATABASE=desapp
+      - SQL_HOST=db
+      - SQL_PORT=5432
+      - SQL_TEST_DATABASE=testdb
+      - RUN_MIGRATIONS=${RUN_MIGRATIONS:-false}
+    volumes:
+      - ./uploads:/app/uploads
+      - ./lib:/app/lib
+      - ./bin:/app/bin
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - remitos-network
+
+  db:
+    image: postgres:12.5-alpine
+    container_name: remitos-db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: desapp
+      ALLOW_IP_RANGE: 0.0.0.0/0
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/postgres/data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d/
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - remitos-network
+
+volumes:
+  db_data:
+
+networks:
+  remitos-network:
+    driver: bridge
