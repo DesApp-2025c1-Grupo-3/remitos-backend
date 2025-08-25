@@ -3,8 +3,10 @@
 # Función para esperar la base de datos
 wait_for_db() {
   echo "⏳ Esperando a que la base de datos esté lista..."
-  # Esperar un poco para que PostgreSQL esté completamente listo
-  sleep 10
+  until pg_isready -h "$SQL_HOST" -p "$SQL_PORT" -U "$SQL_USERNAME"; do
+    echo "⏳ PostgreSQL no listo, esperando 2s..."
+    sleep 2
+  done
   echo "✅ Base de datos lista"
 }
 

@@ -5,7 +5,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Instalar dependencias del sistema necesarias
-RUN apk add --no-cache python3 make g++ netcat-openbsd
+RUN apk add --no-cache python3 make g++ netcat-openbsd postgresql-client
 
 # Copiar archivos de dependencias
 COPY package*.json ./
