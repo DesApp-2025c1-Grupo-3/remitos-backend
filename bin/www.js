@@ -30,9 +30,10 @@ db.sequelize
   .then(() => {
     console.log("✅ Conexión a la base de datos exitosa");
 
-    // Aquí agregamos el sync
-    return db.sequelize.sync({ alter: true });
+    // Comentamos el sync para evitar conflictos con las migraciones
+    // return db.sequelize.sync({ alter: true });
     // alter:true ajusta las tablas si hay cambios (más seguro que force:true)
+    return Promise.resolve(); // Solo autenticamos, no sincronizamos
   })
   .then(() => {
     console.log("📄 Base de datos sincronizada");
