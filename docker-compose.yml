@@ -18,7 +18,9 @@ services:
       - SQL_HOST=db
       - SQL_PORT=5432
       - SQL_TEST_DATABASE=testdb
-      - RUN_SEEDS=${RUN_SEEDS:-false}
+      - RUN_SEEDS=${RUN_SEEDS:-true}
+      - RUN_MIGRATIONS=${RUN_MIGRATIONS:-true}
+      - SKIP_DB_SETUP=${SKIP_DB_SETUP:-false}
     volumes:
       - ./uploads:/app/uploads
       - ${VOLUME_MOUNT:-./lib:/app/lib}

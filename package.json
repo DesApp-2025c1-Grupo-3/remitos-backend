@@ -11,11 +11,11 @@
     "db:seed:estados": "sequelize db:seed --seed 20250101000000-initial-estados.js",
     "demo": "node clean-and-seed.js",
     "docker:dev": "docker compose up --build",
-    "docker:dev:seeds": "RUN_SEEDS=true docker compose up --build",
-    "docker:prod": "DOCKERFILE=Dockerfile NODE_ENV=production VOLUME_ENV= docker compose up --build",
+    "docker:dev:fast": "SKIP_DB_SETUP=true docker compose up --build",
+    "docker:clean": "docker compose down -v && docker compose up --build",
+    "docker:clean:fast": "SKIP_DB_SETUP=true docker compose down -v && docker compose up --build",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
-    "docker:clean": "docker compose down -v && docker system prune -f",
     "render:deploy": "echo 'Para desplegar en Render, usa el Dockerfile.render o configura render.yaml'"
   },
   "nodemonConfig": {
