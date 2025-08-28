@@ -10,6 +10,7 @@
     "db:seed": "sequelize db:seed:all",
     "db:seed:normalizacion": "sequelize db:seed:all",
     "db:seed:estados": "sequelize db:seed --seed 20250101000000-initial-estados.js",
+    "db:reset-sequences": "node scripts/reset-sequences.js",
     "docker:init": "RUN_MIGRATIONS=true RUN_SEEDS=true docker compose up --build",
     "docker:dev": "RUN_MIGRATIONS=false RUN_SEEDS=false docker compose up --build",
     "docker:dev:fast": "SKIP_DB_SETUP=true docker compose up --build",

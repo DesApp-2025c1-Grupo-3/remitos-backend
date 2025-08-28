@@ -30,7 +30,11 @@ services:
         fromDatabase:
           name: remitos-db
           property: port
+      - key: RUN_MIGRATIONS
+        value: true
       - key: RUN_SEEDS
+        value: true
+      - key: SKIP_DB_SETUP
         value: false
     healthCheckPath: /estado
 
