@@ -4,7 +4,7 @@ services:
     env: node
     plan: free
     buildCommand: npm install
-    startCommand: npm start
+    startCommand: chmod +x docker-entrypoint-render.sh && ./docker-entrypoint-render.sh npm start
     envVars:
       - key: NODE_ENV
         value: production
