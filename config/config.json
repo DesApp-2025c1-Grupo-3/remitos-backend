@@ -3,24 +3,29 @@
     "username": "postgres",
     "password": "1234",
     "database": "desapp",
-    "host": "db",
+    "host": "localhost",
+    "port": "5432",
     "dialect": "postgres",
-    "port": 5432
+    "logging": false,
+    "seederStorage": "sequelize"
   },
   "test": {
     "username": "postgres",
     "password": "1234",
-    "database": "testdb",
-    "host": "db",
+    "database": "desapp",
+    "host": "localhost",
+    "port": "5432",
     "dialect": "postgres",
-    "port": 5432
+    "logging": false
   },
   "production": {
     "username": "postgres",
     "password": "1234",
     "database": "desapp",
-    "host": "db",
+    "host": "localhost",
+    "port": "5432",
     "dialect": "postgres",
-    "port": 5432
+    "logging": false,
+    "native": true
   }
 }
