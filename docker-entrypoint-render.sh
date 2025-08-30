@@ -8,10 +8,10 @@ wait_for_db() {
   echo "✅ Base de datos lista"
 }
 
-# Ejecutar migraciones
+# Ejecutar migraciones usando nuestro script personalizado
 run_migrations() {
   echo "🔄 Ejecutando migraciones..."
-  npx sequelize-cli db:migrate || echo "⚠️  Algunas migraciones fallaron (puede ser normal si ya están aplicadas)"
+  node scripts/migrate-prod.js || echo "⚠️  Algunas migraciones fallaron"
 }
 
 # Ejecutar seeds si es necesario
