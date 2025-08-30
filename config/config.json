@@ -23,7 +23,6 @@
         "require": true,
         "rejectUnauthorized": false
       }
-    },
-    "native": true
+    }
   }
 }
