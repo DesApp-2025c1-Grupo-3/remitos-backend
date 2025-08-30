@@ -1,9 +1,10 @@
 services:
   - type: web
     name: remitos-backend
-    env: docker
+    env: node
     plan: free
-    dockerfilePath: ./Dockerfile.render
+    buildCommand: npm install
+    startCommand: npm run deploy:prod
     envVars:
       - key: NODE_ENV
         value: production
