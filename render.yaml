@@ -10,32 +10,10 @@ services:
         value: production
       - key: PORT
         value: 3002
-      - key: SQL_USERNAME
-        fromDatabase:
-          name: remitos-db
-          property: user
-      - key: SQL_PASSWORD
-        fromDatabase:
-          name: remitos-db
-          property: password
-      - key: SQL_DATABASE
-        fromDatabase:
-          name: remitos-db
-          property: database
-      - key: SQL_HOST
-        fromDatabase:
-          name: remitos-db
-          property: host
-      - key: SQL_PORT
-        fromDatabase:
-          name: remitos-db
-          property: port
+      - key: DATABASE_URL
+        sync: false
       - key: RUN_SEEDS
         value: false
+      - key: RUN_MIGRATIONS
+        value: true
     healthCheckPath: /estado
-
-databases:
-  - name: remitos-db
-    databaseName: desapp
-    user: remitos_user
-    plan: free
