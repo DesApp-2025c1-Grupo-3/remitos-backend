@@ -9,6 +9,7 @@
     "db:migrate": "sequelize db:migrate",
     "db:migrate:prod": "node scripts/migrate-prod.js",
     "db:seed": "sequelize db:seed:all",
+    "db:seed:prod": "node scripts/seed-prod.js",
     "db:seed:normalizacion": "sequelize db:seed:all",
     "db:seed:estados": "sequelize db:seed --seed 20250101000000-initial-estados.js",
     "docker:init": "RUN_MIGRATIONS=true RUN_SEEDS=true docker compose up --build",

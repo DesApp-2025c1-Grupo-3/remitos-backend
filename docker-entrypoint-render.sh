@@ -14,14 +14,10 @@ run_migrations() {
   node scripts/migrate-prod.js || echo "⚠️  Algunas migraciones fallaron"
 }
 
-# Ejecutar seeds si es necesario
+# Ejecutar seeds de normalización
 run_seeds() {
-  if [ "$RUN_SEEDS" = "true" ]; then
-    echo "🌱 Ejecutando seeds..."
-    npx sequelize-cli db:seed:all || echo "⚠️  Algunos seeds fallaron (puede ser normal si los datos ya existen)"
-  else
-    echo "ℹ️  Seeds omitidos (RUN_SEEDS no está habilitado)"
-  fi
+  echo "🌱 Ejecutando seeds de normalización..."
+  node scripts/seed-prod.js || echo "⚠️  Algunos seeds fallaron"
 }
 
 # Ejecutar funciones
