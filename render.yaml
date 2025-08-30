@@ -4,16 +4,12 @@ services:
     env: node
     plan: free
     buildCommand: npm install
-    startCommand: chmod +x docker-entrypoint-final.sh && ./docker-entrypoint-final.sh npm start
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 3002
-      - key: DATABASE_URL
-        fromDatabase:
-          name: remitos-db
-          property: connectionString
       - key: SQL_USERNAME
         fromDatabase:
           name: remitos-db
@@ -34,11 +30,7 @@ services:
         fromDatabase:
           name: remitos-db
           property: port
-      - key: RUN_MIGRATIONS
-        value: true
       - key: RUN_SEEDS
-        value: true
-      - key: SKIP_DB_SETUP
         value: false
     healthCheckPath: /estado
 
