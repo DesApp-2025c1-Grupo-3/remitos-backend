@@ -16,11 +16,13 @@
     "port": 5432
   },
   "production": {
-    "username": "postgres",
-    "password": "1234",
-    "database": "desapp",
-    "host": "db",
+    "use_env_variable": "DATABASE_URL",
     "dialect": "postgres",
-    "port": 5432
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }

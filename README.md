@@ -19,66 +19,23 @@ cd remitos-backend
 ```bash
 cp .env.example .env
 ```
-
+### Primera vez que levantes el back
 3. **Levantar la aplicación con Docker:**
 ```bash
 # Desarrollo básico
-npm run docker:dev
+npm run docker:clean (Ya deja levantada la app por lo que ya estaria lista)
 ```
-
-4. **Ejecutar migraciones de base de datos:**
+### Desarrollo diario
+3. **Levantar la aplicación con Docker:**
 ```bash
-npm run db:migrate
-```
-
-5. **Cargar estados del sistema (requerido):**
-```bash
-npm run db:seed:estados
+# Desarrollo básico
+npm run docker:dev (Se recompila solo al hacer cambios)
 ```
 
 ### Comandos Principales
 ```bash
 # Levantar aplicación en modo desarrollo
 npm run docker:dev
-
-
-## 📁 Estructura del Proyecto
-
-```
-remitos-backend/
-├── bin/                    # Punto de entrada del servidor
-├── config/                 # Configuración de base de datos
-├── lib/                    # Lógica de la aplicación
-│   ├── controllers/        # Controladores de la API
-│   ├── models/            # Modelos de Sequelize
-│   └── routes/            # Definición de rutas
-├── migrations/            # Migraciones de base de datos
-├── seeders/               # Datos de prueba
-│   └── 20250101000000-initial-estados.js  # Estados del sistema
-├── docker-compose.yml     # Configuración de Docker
-└── package.json           # Dependencias y scripts
-```
-
-## 🗄️ Base de Datos
-
-### Estados del Sistema
-El sistema requiere que se carguen los estados básicos para funcionar correctamente:
-- Autorizado
-- En preparación
-- En carga
-- En camino
-- Entregado
-- No entregado
-- Retenido
-
-**Importante:** Siempre ejecutar `npm run db:seed:estados` después de las migraciones.
-
-### Otros Seeds (Opcionales)
-Los siguientes seeds contienen datos de demostración y son opcionales:
-- `demo-clientes.js` - Clientes de ejemplo
-- `demo-destinos.js` - Destinos de ejemplo
-- `demo-contactos.js` - Contactos de ejemplo
-- `demo-mercaderias-remitos.js` - Remitos y mercaderías de ejemplo
 ```
 
 ### Logs y Debugging
@@ -93,13 +50,4 @@ npm run dev
 ## 🚀 Despliegue
 
 ### Render
-El proyecto incluye configuración para despliegue en Render:
-```bash
-npm run render:deploy
-```
-
-## 📝 Notas
-
-- La aplicación corre en `http://localhost:3000` por defecto
-- PostgreSQL corre en `localhost:5432`
-- Siempre ejecutar `db:seed:estados` después de migraciones para cargar los estados requeridos
+El proyecto incluye configuración para despliegue en Render y Neon, se despliega automaticamente al mergear a main
