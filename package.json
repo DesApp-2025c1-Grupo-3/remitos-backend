@@ -7,17 +7,18 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
     "db:migrate": "sequelize db:migrate",
-    "db:migrate:prod": "node scripts/migrate-prod.js",
     "db:seed": "sequelize db:seed:all",
-    "db:seed:prod": "node scripts/seed-prod.js",
     "db:seed:normalizacion": "sequelize db:seed:all",
     "db:seed:estados": "sequelize db:seed --seed 20250101000000-initial-estados.js",
-    "deploy:prod": "node scripts/deploy-prod.js",
     "docker:init": "RUN_MIGRATIONS=true RUN_SEEDS=true docker compose up --build",
-    "docker:dev": "cross-env RUN_MIGRATIONS=false RUN_SEEDS=false docker compose up --build",
+    "docker:dev": "RUN_MIGRATIONS=false RUN_SEEDS=false docker compose up --build",
     "docker:dev:fast": "SKIP_DB_SETUP=true docker compose up --build",
-    "docker:clean": "docker compose down -v && cross-env RUN_MIGRATIONS=true RUN_SEEDS=true docker compose up --build",
+    "docker:clean": "docker compose down -v && RUN_MIGRATIONS=true RUN_SEEDS=true docker compose up --build",
     "docker:clean:fast": "SKIP_DB_SETUP=true docker compose down -v && docker compose up --build",
+    "populate-db": "node scripts/populate-local-db.js",
+    "clean-db": "node scripts/clean-local-db.js",
+    "check-ids": "node scripts/check-ids.js",
+    "reset-sequences": "node scripts/reset-sequences.js",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
     "render:deploy": "echo 'Para desplegar en Render, usa el Dockerfile.render o configura render.yaml'"
@@ -49,7 +50,6 @@
     "sequelize": "^5.x"
   },
   "devDependencies": {
-    "cross-env": "^10.0.0",
     "nodemon": "^2.0.3",
     "sequelize-cli": "^6.2.0"
   },
