@@ -16,4 +16,6 @@ services:
         value: false
       - key: RUN_MIGRATIONS
         value: true
+      - key: POPULATE_DB
+        value: false
     healthCheckPath: /estado
