@@ -33,11 +33,6 @@ async function deploy() {
   try {
     console.log('🚀 Iniciando deploy de producción...');
     
-    // Verificar variable de entorno para poblar la base de datos
-    const shouldPopulateDB = process.env.POPULATE_DB === 'true';
-    console.log(`📊 Variable POPULATE_DB: ${process.env.POPULATE_DB || 'false'}`);
-    console.log(`🌱 Poblar base de datos: ${shouldPopulateDB ? '✅ SÍ' : '❌ NO'}`);
-    
     // Esperar un poco para que la base de datos esté lista
     console.log('⏳ Esperando a que la base de datos esté lista...');
     await new Promise(resolve => setTimeout(resolve, 10000));
@@ -50,16 +45,25 @@ async function deploy() {
       console.log('⚠️  Migraciones fallaron, continuando...');
     }
     
-    // Ejecutar seeds solo si la variable de entorno lo indica
-    if (shouldPopulateDB) {
-      try {
-        console.log('🌱 Ejecutando seeds (poblar base de datos)...');
-        await runCommand('npm', ['run', 'db:seed:prod']);
-      } catch (error) {
-        console.log('⚠️  Seeds fallaron, continuando...');
-      }
-    } else {
-      console.log('ℹ️  Saltando seeds - POPULATE_DB no está configurado como true');
+    // Ejecutar ciclo completo de población automáticamente
+    try {
+      console.log('🌱 Ejecutando seeds de normalización...');
+      await runCommand('npm', ['run', 'db:seed:prod']);
+      
+      console.log('📊 Poblando base de datos con datos de prueba...');
+      await runCommand('npm', ['run', 'populate-db']);
+      
+      console.log('🔍 Verificando IDs generados...');
+      await runCommand('npm', ['run', 'check-ids']);
+      
+      console.log('🔄 Reseteando secuencias de IDs...');
+      await runCommand('npm', ['run', 'reset-sequences']);
+      
+      console.log('✅ Ciclo completo de población ejecutado exitosamente');
+      
+    } catch (error) {
+      console.log('⚠️  Algunos pasos del ciclo completo fallaron, continuando...');
+      console.log('Error:', error.message);
     }
     
     // Iniciar la aplicación

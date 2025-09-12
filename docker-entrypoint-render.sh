@@ -20,10 +20,22 @@ run_seeds() {
   node scripts/seed-prod.js || echo "⚠️  Algunos seeds fallaron"
 }
 
+# Ejecutar ciclo completo de población
+run_full_cycle() {
+  echo "📊 Poblando base de datos con datos de prueba..."
+  node scripts/populate-local-db.js || echo "⚠️  Población de datos falló"
+  
+  echo "🔍 Verificando IDs generados..."
+  node scripts/check-ids.js || echo "⚠️  Verificación de IDs falló"
+  
+  echo "🔄 Reseteando secuencias de IDs..."
+  node scripts/reset-sequences.js || echo "⚠️  Reset de secuencias falló"
+}
+
 # Verificar si se debe poblar la base de datos
 should_populate_db() {
   if [ "$POPULATE_DB" = "true" ]; then
-    echo "✅ POPULATE_DB está configurado como true - se poblará la base de datos"
+    echo "✅ POPULATE_DB está configurado como true - se ejecutará el ciclo completo"
     return 0
   else
     echo "❌ POPULATE_DB no está configurado como true - NO se poblará la base de datos"
@@ -35,11 +47,12 @@ should_populate_db() {
 wait_for_db
 run_migrations
 
-# Solo ejecutar seeds si la variable de entorno lo indica
+# Solo ejecutar ciclo completo si la variable de entorno lo indica
 if should_populate_db; then
   run_seeds
+  run_full_cycle
 else
-  echo "ℹ️  Saltando seeds - POPULATE_DB no está configurado como true"
+  echo "ℹ️  Saltando ciclo completo - POPULATE_DB no está configurado como true"
 fi
 
 # Iniciar la aplicación

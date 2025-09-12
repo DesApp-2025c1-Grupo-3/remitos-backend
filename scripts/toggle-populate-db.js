@@ -29,13 +29,17 @@ console.log('');
 
 if (newValue === 'true') {
   console.log('✅ POPULATE_DB habilitado');
-  console.log('🌱 En el próximo deploy se poblará la base de datos con:');
-  console.log('   - Estados iniciales');
-  console.log('   - Tipos de empresa');
-  console.log('   - Tipos de mercadería');
+  console.log('🌱 En el próximo deploy se ejecutará el ciclo completo:');
+  console.log('   1. 🌱 Seeds de normalización (estados, tipos)');
+  console.log('   2. 📊 Población con datos de prueba (25 clientes, destinos, remitos)');
+  console.log('   3. 🔍 Verificación de IDs generados');
+  console.log('   4. 🔄 Reset de secuencias de IDs');
+  console.log('   5. 🚀 Inicio de la aplicación');
 } else {
   console.log('❌ POPULATE_DB deshabilitado');
-  console.log('🚀 En el próximo deploy solo se ejecutarán las migraciones');
+  console.log('🚀 En el próximo deploy solo se ejecutarán:');
+  console.log('   1. 🔄 Migraciones de base de datos');
+  console.log('   2. 🚀 Inicio de la aplicación');
 }
 
 console.log('');
@@ -50,3 +54,10 @@ console.log('');
 console.log('⚠️  IMPORTANTE: Solo habilita POPULATE_DB=true cuando necesites');
 console.log('   poblar una base de datos nueva o vacía. En deploys normales');
 console.log('   debe estar en false para evitar duplicar datos.');
+console.log('');
+console.log('📋 El ciclo completo incluye:');
+console.log('   • 25 Clientes con contactos');
+console.log('   • 25 Destinos con contactos'); 
+console.log('   • 25 Remitos con fechas distribuidas');
+console.log('   • 25 Mercaderías (una por remito)');
+console.log('   • Verificación y reset de secuencias de IDs');
