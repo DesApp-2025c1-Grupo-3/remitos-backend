@@ -20,6 +20,9 @@
     "deploy:prod": "node scripts/deploy-prod.js",
     "db:migrate:prod": "node scripts/migrate-prod.js",
     "db:seed:prod": "node scripts/seed-prod.js",
+    "populate-db": "node scripts/populate-local-db.js",
+    "check-ids": "node scripts/check-ids.js",
+    "reset-sequences": "node scripts/reset-sequences.js",
     "populate-db:enable": "node scripts/toggle-populate-db.js true",
     "populate-db:disable": "node scripts/toggle-populate-db.js false",
     "render:deploy": "echo 'Para desplegar en Render, usa el Dockerfile.render o configura render.yaml'"
