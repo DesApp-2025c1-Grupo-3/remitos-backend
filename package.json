@@ -11,9 +11,9 @@
     "db:seed:normalizacion": "sequelize db:seed:all",
     "db:seed:estados": "sequelize db:seed --seed 20250101000000-initial-estados.js",
     "docker:init": "RUN_MIGRATIONS=true RUN_SEEDS=true docker compose up --build",
-    "docker:dev": "RUN_MIGRATIONS=false RUN_SEEDS=false docker compose up --build",
+    "docker:dev": "cross-env RUN_MIGRATIONS=false RUN_SEEDS=false docker compose up --build",
     "docker:dev:fast": "SKIP_DB_SETUP=true docker compose up --build",
-    "docker:clean": "docker compose down -v && RUN_MIGRATIONS=true RUN_SEEDS=true docker compose up --build",
+    "docker:clean": "docker compose down -v && cross-env RUN_MIGRATIONS=true RUN_SEEDS=true docker compose up --build",
     "docker:clean:fast": "SKIP_DB_SETUP=true docker compose down -v && docker compose up --build",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
@@ -54,6 +54,7 @@
     "sequelize": "^5.x"
   },
   "devDependencies": {
+    "cross-env": "^10.0.0",
     "nodemon": "^2.0.3",
     "sequelize-cli": "^6.2.0"
   },

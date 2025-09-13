@@ -68,6 +68,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      fechaAgenda: {
+        allowNull: true,
+        type: Sequelize.DATE,
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {
