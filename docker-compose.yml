@@ -21,6 +21,12 @@ services:
       - RUN_SEEDS=${RUN_SEEDS:-true}
       - RUN_MIGRATIONS=${RUN_MIGRATIONS:-true}
       - SKIP_DB_SETUP=${SKIP_DB_SETUP:-false}
+      # Configuración de Email (Brevo)
+      - EMAIL_HOST=${EMAIL_HOST:-smtp-relay.brevo.com}
+      - EMAIL_PORT=${EMAIL_PORT:-587}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
+      - EMAIL_FROM=${EMAIL_FROM}
     volumes:
       - ./uploads:/app/uploads
       - ${VOLUME_MOUNT:-./lib:/app/lib}
