@@ -40,6 +40,11 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
+        {
+          nombre: "Agendado",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       ],
       {}
     );
