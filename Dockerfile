@@ -22,10 +22,12 @@ RUN mkdir -p uploads
 # Copiar script de entrada
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# Normalizar finales de línea en caso de CRLF desde Windows
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh || true
 
 # Exponer puerto
 EXPOSE 3002
 
-# Usar entrypoint
-ENTRYPOINT ["docker-entrypoint.sh"]
+# Usar entrypoint (ruta absoluta)
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["npm", "start"]
