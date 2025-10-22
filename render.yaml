@@ -18,16 +18,14 @@ services:
         value: true
       - key: POPULATE_DB
         value: false
-      # Configuración de Email (Gmail SMTP)
-      - key: EMAIL_HOST
-        value: smtp.gmail.com
-      - key: EMAIL_PORT
-        value: 587
-      - key: EMAIL_USER
+      # Configuración de Email (Gmail API)
+      - key: GMAIL_CLIENT_ID
         sync: false
-      - key: EMAIL_PASS
+      - key: GMAIL_CLIENT_SECRET
         sync: false
-      - key: EMAIL_FROM
+      - key: GMAIL_REFRESH_TOKEN
+        sync: false
+      - key: GMAIL_USER_EMAIL
         sync: false
       - key: EMAIL_FROM_NAME
         value: Remitos ACME
