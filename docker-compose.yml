@@ -14,8 +14,8 @@ services:
       - PORT=3002
       - SQL_USERNAME=postgres
       - SQL_PASSWORD=1234
-      - SQL_DATABASE=desapp
-      - SQL_HOST=db
+      - SQL_DATABASE=remitos_db
+      - SQL_HOST=remitos-db
       - SQL_PORT=5432
       - SQL_TEST_DATABASE=testdb
       - RUN_SEEDS=${RUN_SEEDS:-true}
@@ -32,19 +32,19 @@ services:
       - ${VOLUME_MOUNT:-./lib:/app/lib}
       - ${VOLUME_MOUNT:-./bin:/app/bin}
     depends_on:
-      db:
+      remitos-db:
         condition: service_healthy
     networks:
       - remitos-network
 
-  db:
+  remitos-db:
     image: postgres:12.5-alpine
     container_name: remitos-db
     restart: always
     environment:
       POSTGRES_PASSWORD: 1234
       POSTGRES_USER: postgres
-      POSTGRES_DB: desapp
+      POSTGRES_DB: remitos_db
       ALLOW_IP_RANGE: 0.0.0.0/0
     ports:
       - "5432:5432"

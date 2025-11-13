@@ -2,8 +2,8 @@
   "development": {
     "username": "postgres",
     "password": "1234",
-    "database": "desapp",
-    "host": "db",
+    "database": "remitos_db",
+    "host": "remitos-db",
     "dialect": "postgres",
     "port": 5432
   },
@@ -11,7 +11,7 @@
     "username": "postgres",
     "password": "1234",
     "database": "testdb",
-    "host": "db",
+    "host": "remitos-db",
     "dialect": "postgres",
     "port": 5432
   },
