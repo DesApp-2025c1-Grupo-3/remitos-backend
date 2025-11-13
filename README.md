@@ -47,6 +47,26 @@ npm run docker:logs
 npm run dev
 ```
 
+## 🗄️ Conexión a Base de Datos (DBeaver)
+
+Para visualizar y gestionar la base de datos con DBeaver u otro cliente PostgreSQL:
+
+### Configuración de Conexión
+
+```
+Host:          localhost
+Puerto:        5432
+Base de Datos: remitos_db
+Usuario:       postgres
+Contraseña:    1234
+```
+
+### Notas Importantes
+- ⚠️ **Asegúrate de que los contenedores de Docker estén corriendo** antes de conectarte
+- 🔍 Verifica que los contenedores estén activos con: `docker ps`
+- 📊 Dentro del contenedor Docker, el servicio se llama `remitos-db`, pero desde tu máquina local debes usar `localhost`
+- 🔐 En producción, las credenciales se configuran mediante variables de entorno
+
 ## 🚀 Despliegue
 
 ### Render
