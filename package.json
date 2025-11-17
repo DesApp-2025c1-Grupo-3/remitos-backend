@@ -25,6 +25,7 @@
     "reset-sequences": "node scripts/reset-sequences.js",
     "populate-db:enable": "node scripts/toggle-populate-db.js true",
     "populate-db:disable": "node scripts/toggle-populate-db.js false",
+    "gmail:refresh-token": "node scripts/generate-gmail-refresh-token.js",
     "render:deploy": "echo 'Para desplegar en Render, usa el Dockerfile.render o configura render.yaml'"
   },
   "nodemonConfig": {
